@@ -35,27 +35,36 @@ format:
 
 ## 3.1 Arborescence 
 
+```mermaid
 gantt
-    title StreamOptions — Rétroplanning (Semaines 1–5)
+    title StreamOptions - Retroplanning (Weeks 1-5)
     dateFormat  YYYY-MM-DD
     excludes    weekends
 
-    section Phase 0 — Initialisation
-    Squelette projet                     :s1, 2025-10-21, 1d
-    Setup repo + branches (main/dev)     :s2, after s1, 2d
-    Requirements + README                :s3, after s2, 1d
+    section Phase 0 - Init
+    Project skeleton                    :s1, 2025-10-21, 1d
+    Repo setup + branches (main/dev)    :s2, after s1, 2d
+    Requirements + README               :s3, after s2, 1d
 
-    section Phase 1 — Données & Calibrage
-    Intégration Yahoo (yfinance)         :d1, 2025-10-24, 2d
-    Prétraitement & S0                   :d2, after d1, 1d
-    Calibrage σ (historique / EWMA)      :d3, after d2, 2d
+    section Phase 1 - Data & Calib
+    Yahoo integration (yfinance)        :d1, 2025-10-24, 2d
+    Preprocessing & S0                  :d2, after d1, 1d
+    Sigma calibration (hist/EWMA)       :d3, after d2, 2d
 
-    section Phase 2 — Moteurs de pricing
-    Black–Scholes + Greeks               :p1, 2025-10-28, 1d
-    Binomial (CRR) + Greeks (FD)         :p2, after p1, 2d
-    Monte-Carlo (+ IC 95% + timings)     :p3, after p2, 2d
+    section Phase 2 - Pricing Engines
+    Black-Scholes + Greeks              :p1, 2025-10-28, 1d
+    Binomial (CRR) + Greeks (FD)        :p2, after p1, 2d
+    Monte Carlo (+ CI95% + timings)     :p3, after p2, 2d
 
-    section Phase 3 — UI & Visualisations
-    Pages Streamlit (params, résultats)  :u1, 2025-11-03, 2d
-    Graphiques comparatifs (prix/greeks) :u2, after u1, 1d
-    Convergen
+    section Phase 3 - UI & Viz
+    Streamlit pages (params, results)   :u1, 2025-11-03, 2d
+    Comparative charts (price/greeks)   :u2, after u1, 1d
+    Convergence (Binomial N / MC M)     :u3, after u2, 2d
+
+    section Phase 4 - QA & Delivery
+    Unit tests (parity, conv.)          :q1, 2025-11-06, 2d
+    Polish + docs + capture             :q2, after q1, 1d
+    Demo & feedback                     :dl, 2025-11-10, 1d
+```
+, 1d
+
