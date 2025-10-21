@@ -37,5 +37,39 @@ format:
 
 ## 3.1 Arborescence prévue
 
+gantt
+  title StreamOptions — Rétroplanning (Semaines 1 → 5)
+  dateFormat  YYYY-MM-DD
+  excludes    weekends
+
+  %% === Phase 0 : Initialisation ===
+  section Setup
+  Création repo + branches (master/dev)   :done,    s1, 2025-10-21, 1d
+  Squelette projet (app/core/tests)       :active,  s2, after s1, 2d
+  Requirements + README                   :         s3, after s2, 1d
+
+  %% === Phase 1 : Données & Calibrage ===
+  section Données & Calibrage
+  Intégration Yahoo (yfinance)            :        d1, 2025-10-24, 2d
+  Prétraitement & S0                      :        d2, after d1, 1d
+  Calibrage σ (historique / EWMA)         :        d3, after d2, 2d
+
+  %% === Phase 2 : Moteurs de pricing ===
+  section Tarification
+  Black-Scholes + Greeks                  :        p1, 2025-10-28, 1d
+  Binomial (CRR) + Greeks (FD)            :        p2, after p1, 2d
+  Monte-Carlo (+ IC 95% + timings)        :        p3, after p2, 2d
+
+  %% === Phase 3 : UI & Visualisations ===
+  section UI & Visualisation
+  Pages Streamlit (params, résultats)     :        u1, 2025-11-03, 2d
+  Graphiques comparatifs (prix/greeks)    :        u2, after u1, 1d
+  Convergence (Binomial N / MC M)         :        u3, after u2, 2d
+
+  %% === Phase 4 : Qualité & Livraison ===
+  section QA & Livraison
+  Tests unitaires (parité, conv.)         :        q1, 2025-11-06, 2d
+  Polissage + doc + capture               :        q2, after q1, 1d
+  Démo & feedback                         :        dl, 2025-11-10, 1d
 
 
