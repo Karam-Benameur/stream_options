@@ -11,10 +11,10 @@ format:
     theme: cosmo
 ---
 
-# 1) Nom du projet
+# 1) Nom du projet et idée du concept
 
 **Nom du module** : `stream_options`  
-**Titre** : *Application Streamlit pour calibrer et comparer le prix d’options européennes (call/put) via Black-Scholes, Binomial et Monte-Carlo, avec analyse des écarts, Greeks, convergence et incertitude.*
+**Idée** : Ce projet consiste à user de Streamlit pour calibrer et comparer le prix d’options européennes (call/put) via 3 différentes méthodes qui sont: Black-Scholes, Binomial et Monte-Carlo, avec analyse des écarts, Greeks, convergence et incertitude.
 
 ---
 
