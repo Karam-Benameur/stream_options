@@ -37,17 +37,17 @@ format:
 
 ```mermaid
 gantt
-    title StreamOptions - Retroplanning (Weeks 1-5)
-    dateFormat  YYYY-MM-DD
+    StreamOptions - Retroplanning semaines 1-5
+    dateFormat  DD-MM-YYYY
     excludes    weekends
 
     section Phase 0 - Init
-    Project skeleton                    :s1, 2025-10-21, 1d
-    Repo setup + branches (main/dev)    :s2, after s1, 2d
-    Requirements + README               :s3, after s2, 1d
+    Squelette du projet                 :s1, 21-10-2025, 1d
+    Setup du REPO + branches (main/dev) :s2, after s1, 2d
+    README                              :s3, after s2, 1d
 
     section Phase 1 - Data & Calib
-    Yahoo integration (yfinance)        :d1, 2025-10-24, 2d
+    Yahoo integration (yfinance)        :d1, 23-10-2025, 2d
     Preprocessing & S0                  :d2, after d1, 1d
     Sigma calibration (hist/EWMA)       :d3, after d2, 2d
 
@@ -66,5 +66,4 @@ gantt
     Polish + docs + capture             :q2, after q1, 1d
     Demo & feedback                     :dl, 2025-11-10, 1d
 ```
-, 1d
 
