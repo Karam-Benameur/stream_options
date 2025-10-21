@@ -1,10 +1,10 @@
 git add README.qmd
 ---
-title: "📈 StreamOptions — Tarification d’options européennes (BS / Binomial / Monte-Carlo)"
-author:
-  - Ayoub Maloum
+title: StreamOptions — Tarification d’options européennes (BS / Binomial / Monte-Carlo)"
+auteurs:
+  - Ayoub MALOUM
   - Houenafa Esperance DJOSSOU 
-  - Karam Benameur
+  - Karam BENAMEUR
 format:
   html:
     toc: true
