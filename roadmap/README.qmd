@@ -1,0 +1,42 @@
+git add README.qmd
+---
+title: "📈 StreamOptions — Tarification d’options européennes (BS / Binomial / Monte-Carlo)"
+author:
+  - Samy M’Rad
+  - [Coéquipier·e 2]
+  - [Coéquipier·e 3]
+format:
+  html:
+    toc: true
+    number-sections: true
+    theme: cosmo
+---
+
+# 1) Nom du projet
+
+**Nom du module** : `stream_options`  
+**Titre** : *Application Streamlit pour calibrer et comparer le prix d’options européennes (call/put) via Black-Scholes, Binomial et Monte-Carlo, avec analyse des écarts, Greeks, convergence et incertitude.*
+
+---
+
+# 2) Minimum Viable Project (MVP)
+
+## 2.1 Objectif utilisateur
+- Saisir un **ticker** (ex. `AAPL`), **strike K**, **échéance T**, **r**, **dividendes q** (ou 0).
+- Récupérer les **données Yahoo Finance** (spot, historique, dividendes).
+- **Calibrer σ** (vol historique simple ou EWMA) ou saisir une **vol implicite** manuelle.
+- **Tarifer** l’option européenne **Call/Put** par **3 méthodes** : Black-Scholes (fermé), **Binomial CRR**, **Monte-Carlo**.
+- Afficher **prix + Greeks (Δ, Γ, Θ, 𝑽, ρ)**, **écarts entre méthodes**, **temps de calcul**, **IC 95% MC**.
+- Visualiser la **convergence** (Binomial: prix vs nombre de pas N; MC: prix & IC vs nombre de trajectoires M).
+
+## 2.2 Hors-scope MVP
+- Options américaines / exotiques, modèles de volatilité stochastique, scraping auto des volatilités implicites.
+
+---
+
+# 3) Architecture du projet
+
+## 3.1 Arborescence prévue
+
+
+
