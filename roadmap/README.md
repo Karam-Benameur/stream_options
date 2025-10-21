@@ -1,4 +1,4 @@
-README Projet Logiciel Gr.5:" StreamOptions — Tarification d’options européennes (BS / Binomial / Monte-Carlo)"
+## README Projet Logiciel Gr.5:" StreamOptions — Tarification d’options européennes (BS / Binomial / Monte-Carlo)"
 auteurs:
   - Ayoub MALOUM
   - Esperance 
