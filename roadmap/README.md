@@ -3,13 +3,7 @@ Auteurs:
   - Ayoub MALOUM
   - Esperance DJOSSOU
   - Karam BENAMEUR
-    
-format:
-  html:
-    toc: true
-    number-sections: true
-    theme: cosmo
----
+
 
 # 1) Nom du projet et idée du concept
 
