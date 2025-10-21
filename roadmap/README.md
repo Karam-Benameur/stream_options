@@ -37,7 +37,7 @@ format:
 
 ```mermaid
 gantt
-    StreamOptions - Retroplanning semaines
+    title StreamOptions - Retroplanning (Weeks 1-5)
     dateFormat  DD-MM-YYYY
     excludes    weekends
 
