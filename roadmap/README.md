@@ -37,9 +37,9 @@ format:
 
 ```mermaid
 gantt
-    title StreamOptions - Retroplanning (Weeks 1-5)
+    title StreamOptions - Retroplanning semaines 1 à 5
     dateFormat  DD-MM-YYYY
-    excludes    weekends
+    includes    weekends
 
     section Phase 0 - Init
     Squelette du projet                 :s1, 21-10-2025, 1d
