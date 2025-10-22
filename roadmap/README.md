@@ -50,6 +50,7 @@ E --> F2[Binomial (CRR)]
 E --> F3[Monte-Carlo]
 F1 & F2 & F3 --> G[Comparaison: prix, Greeks, écarts, IC, temps]
 G --> H[Visualisations & export]
+```
 
 # 4) Maquettes (wireframes rapides)
 
