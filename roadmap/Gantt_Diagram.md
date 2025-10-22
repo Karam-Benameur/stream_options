@@ -10,7 +10,7 @@ gantt
     Setup du REPO + branches (main/dev) :s3, 24-10-2025, 1d
 
     section Phase 1 - Data & Calib
-    Yahoo integration (yfinance)        :d1, 23-10-2025, 2d
+    Yahoo integration (yfinance)        :d1, 01-11-2025, 2d
     Preprocessing & S0                  :d2, after d1, 1d
     Sigma calibration (hist/EWMA)       :d3, after d2, 2d
 
@@ -27,5 +27,5 @@ gantt
     section Phase 4 - QA & Delivery
     Unit tests (parity, conv.)          :q1, 2025-11-06, 2d
     Polish + docs + capture             :q2, after q1, 1d
-    Demo & feedback                     :dl, 2025-11-10, 1d
+    Demo & feedback                     :dl, 10-12-2025, 1d
 ```
