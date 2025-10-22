@@ -2,7 +2,7 @@
 gantt
     title Rétro-planning - Option Pricing App (27/10 → 12/12/2025)
     dateFormat  YYYY-MM-DD
-    excludes    weekends
+    %% aucune exclusion -> pas de bandes jaunes
 
     section Phase 0 – Snapshot & Infra
     Snapshot (README+images+Gantt)      :s1, 2025-10-27, 1d
