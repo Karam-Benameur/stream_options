@@ -7,7 +7,7 @@ gantt
     section Phase 0 - Init
     Squelette du projet                 :s1, 21-10-2025, 1d
     Setup du REPO + branches (main/dev) :s2, after s1, 2d
-    README                              :s3, after s2, 1d
+     README                              :s3, after s2, 1d
 
     section Phase 1 - Data & Calib
     Yahoo integration (yfinance)        :d1, 23-10-2025, 2d
