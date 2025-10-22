@@ -1,11 +1,11 @@
 ```mermaid
 gantt
-    title Rétro-planning - Option Pricing App (27/10 → 12/12/2025)
+    title Rétro-planning - Option Pricing App (22/10 → 12/12/2025)
     dateFormat  YYYY-MM-DD
     %% aucune exclusion -> pas de bandes jaunes
 
     section Phase 0 – Infra
-    Snapshot (README+images+Gantt)      :s1, 2025-10-27, 1d
+    Snapshot (README+images+Gantt)      :s1, 2025-10-22, 1d
     Repo & branches (.gitignore, PR)    :s2, after s1, 1d
 
     section Phase 1 – Données & Calib
