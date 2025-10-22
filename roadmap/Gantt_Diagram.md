@@ -35,4 +35,5 @@ gantt
     Freeze and tag v1.0                                 :rel, 2025-12-11, 1d
     Demo and submission                                 :fin, 2025-12-12, 1d
 
+
 ```
