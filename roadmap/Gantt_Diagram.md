@@ -5,8 +5,8 @@ gantt
     %% aucune exclusion -> pas de bandes jaunes
 
     section Phase 0 – Infra
-    Snapshot (README+images+Gantt)      :s1, 2025-10-22, 1d
-    Repo & branches (.gitignore, PR)    :s2, after s1, 1d
+    Snapshot (README+images+Gantt)      :s1, 2025-10-21, 4d
+    Repo & branches (.gitignore, PR)    :s2, 2025-10-22, 1d
 
     section Phase 1 – Données & Calib
     yfinance + cache                     :d1, after s2, 2d
