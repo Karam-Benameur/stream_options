@@ -5,7 +5,7 @@ gantt
     %% aucune exclusion -> pas de bandes jaunes
 
     section Phase 0 – Infra
-                                        :s1, 2025-10-15, 0d
+    .                                   :s1, 2025-10-17, 0d
     Snapshot (README+images+Gantt)      :s2, 2025-10-21, 4d
     Repo & branches (.gitignore, PR)    :s3, 2025-10-22, 1d
 
