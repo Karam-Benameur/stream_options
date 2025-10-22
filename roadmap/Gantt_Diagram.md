@@ -4,7 +4,7 @@ gantt
     dateFormat  YYYY-MM-DD
     %% aucune exclusion -> pas de bandes jaunes
 
-    section Phase 0 – Snapshot & Infra
+    section Phase 0 – Infra
     Snapshot (README+images+Gantt)      :s1, 2025-10-27, 1d
     Repo & branches (.gitignore, PR)    :s2, after s1, 1d
 
