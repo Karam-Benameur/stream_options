@@ -6,7 +6,7 @@
 
 ## Interface 2
 
-![Black Scholes](pictures/vagabond-manga-water-sword-training-nppmzivjjqcvpun2.jpg)*
+![Black Scholes](pictures/vagabond-manga-water-sword-training-nppmzivjjqcvpun2.jpg)
 
 ## Interface 3
 
