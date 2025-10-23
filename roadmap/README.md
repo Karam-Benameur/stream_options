@@ -37,4 +37,46 @@ Suite à cela, sur le site on rendra possible l'analyse des écarts, Greeks, une
 - **plotly** (graphiques interactifs), **joblib** (cache)
 - **pytest** (tests), **ruff/black** (lint/format)
 
+``` mermaid
+flowchart LR
+  subgraph UI[UI – Streamlit]
+    P1[Page 1: Monte Carlo]
+    P2[Page 2: Black–Scholes]
+    P3[Page 3: Binomial]
+  end
 
+  subgraph CORE[Core – Pricing & Greeks]
+    PR[OptionPricer<br/>(black_scholes, binomial, monte_carlo)]
+    GR[Greeks<br/>(delta, gamma, vega...)]
+  end
+
+  subgraph DATA[Data – IO & Cache]
+    IO[fetch_prices(ticker, start, end)]
+    C[(Local cache)]
+    API[(Yahoo Finance)]
+  end
+
+  subgraph VIZ[Visualization – Utils]
+    PL[plotting.py<br/>(payoff, paths, convergence)]
+  end
+
+  subgraph QA[Quality]
+    T[pytest]
+    CI[GitHub Actions<br/>(tests + lint)]
+  end
+
+  %% Flux
+  P1 --> PR
+  P2 --> PR
+  P3 --> PR
+  P1 --> IO
+  P2 --> IO
+  P3 --> IO
+  PR --> GR
+  PR --> PL
+  IO --> C
+  IO --> API
+  UI --> PL
+  T --> PR
+  CI --> T
+```
