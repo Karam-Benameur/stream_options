@@ -3,7 +3,7 @@ gantt
     title Rétro-planning - Option Pricing App (22/10 → 12/12/2025)
     dateFormat  YYYY-MM-DD
 
-    section Phase 0 – Infra
+    section Phase 0 – Structure 
     GitHub creation                     :s1, 2025-09-18, 1d
     Brainstroming                       :s2, 2025-09-20, 25d
     Skeleton of the project             :s3, 2025-10-15, 6d
