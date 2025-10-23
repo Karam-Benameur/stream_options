@@ -120,53 +120,28 @@ Core → Greeks/Plots : calcule greeks, renvoie des objets/figures.
 
 QA : tests locaux (pytest), exécutés automatiquement par GitHub Actions.
 
-# 6) Choix des packages et justifications
+# 6) Tech stack et justifications
 
-Tech stack & pourquoi ces choix
+- **streamlit** — UI rapide et reproductible : construit la barre latérale et les 3 pages (Monte Carlo / Black-Scholes / Binomial) avec peu de code ; cache intégré (`st.cache_data`) pour éviter les rechargements.
 
-streamlit — UI rapide et reproductible :
-Permet de construire l’interface (sidebar, pages “Monte Carlo / Black-Scholes / Binomial”, formulaires d’entrée, affichage des graphiques) en quelques lignes. Cache intégré (st.cache_data) pour éviter de recharger les données à chaque interaction. (Alternatives : Dash, Gradio ; Streamlit est plus simple et suffit pour notre MVP.)
+- **numpy** — calcul numérique vectorisé : simulation des trajectoires GBM (Monte Carlo), opérations du modèle binomial, calcul efficace des intermédiaires de Black-Scholes (`d1`, `d2`).
 
-numpy — calcul numérique vectorisé :
-Simulation des trajectoires GBM en Monte Carlo, opérations vectorielles dans l’arbre binomial, calculs intermédiaires (log, exp, racines) pour 
-𝑑
-1
-,
-𝑑
-2
-d
-1
-	​
+- **pandas** — séries temporelles & préparation des données : gestion des prix historiques (index temps), resampling, rendements, estimation de volatilité glissante, traitement des manquants.
 
-,d
-2
-	​
+- **scipy** — statistiques & numérique fiables : `scipy.stats.norm.cdf/pdf` pour Black-Scholes ; `optimize` possible pour calibrer la volatilité implicite.
 
- de Black-Scholes. Réduit le temps de calcul vs. boucles Python pures.
+- **yfinance** — téléchargement programmatique des prix (reproductible) : récupère les données OHLCV par ticker/période, sans téléchargement manuel ; compatible avec le cache local.
 
-pandas — séries temporelles & préparation des données :
-Gestion des prix historiques (index temps), resampling, jointures éventuelles, calcul de rendements et de volatilité historique, traitement des valeurs manquantes avant le pricing.
+- **matplotlib** — figures statiques pour le rapport : payoff call/put et courbes de convergence (prix vs. #pas/#trajectoires), export d’images vers `roadmap/pictures`.
 
-scipy — fonctions statistiques et outils numériques :
-scipy.stats.norm.cdf/pdf pour Black-Scholes (loi normale), éventuellement optimize (recherche de racines / calibration de volatilité implicite) et interp si besoin. Évite de re-coder des briques mathématiques sensibles.
+- **plotly** — graphiques interactifs dans Streamlit : zoom, survol/infobulles pour l’historique des prix et les trajectoires Monte Carlo ; améliore l’explicabilité en démo.
 
-yfinance — téléchargement programmatique des prix :
-Récupère les séries OHLCV d’un ticker sur une période donnée. Assure la reproductibilité (scriptable, pas de téléchargement manuel) et alimente les pages “Price by time”. (On pourra cacher les résultats localement.)
+- **pytest** — tests unitaires & non-régression : vérifie la convergence binomiale vers Black-Scholes, la monotonie en σ, et la gestion des erreurs ; base de la CI.
 
-matplotlib — graphiques de base & figures statiques :
-Payoff call/put, courbes de convergence (prix vs #pas/#trajectoires), exports d’images simples pour le dossier roadmap/pictures.
+- **black / isort / flake8** — qualité & PEP8 : formatage auto (black), imports triés (isort) et linting (flake8) pour un code lisible et cohérent entre contributeurs.
 
-plotly — graphiques interactifs dans l’UI :
-Zoom, hover, tooltips dans Streamlit pour les trajectoires Monte Carlo et les historiques de prix. Améliore l’explicabilité et la démonstration en séance.
+- **numba** *(optionnel)* — accélération JIT : compile les boucles lourdes (MC / binomial) et peut apporter des gains ×5 à ×50 ; utile pour le critère “Time/Memory efficiency”.
 
-pytest — tests unitaires & non-régression :
-Vérifie (i) que le prix binomial converge vers Black-Scholes, (ii) que des propriétés de monotonie tiennent (ex. prix ↑ quand σ ↑), (iii) que les fonctions lèvent les bonnes erreurs. Base de la CI.
-
-black / isort / flake8 — qualité & standard PEP8 :
-Mise en forme automatique (black), import triés (isort), règles de lint (flake8). Garantit un code lisible, cohérent entre contributeurs et facile à relire par le correcteur.
-
-(optionnel) numba — accélération JIT :
-Compile en natif les boucles lourdes (génération de chemins MC, parcours d’un arbre binomial). Gain typique ×5 à ×50 selon la taille (utile pour les démonstrations de performance “Time/Memory efficiency”).
 
 
 
