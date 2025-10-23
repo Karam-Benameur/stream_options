@@ -13,7 +13,7 @@ Suite à cela, sur le site on rendra possible l'analyse des écarts, Greeks, une
 
 ---
 
-# 2) Minimum Viable Project (MVP)
+# 2) Objectifs et utilité
 
 ## 2.1 Objectif utilisateur
 - Saisir un **ticker** (ex. `AAPL`), **strike K**, **échéance T**, **r**, **dividendes q** (ou 0).
@@ -25,7 +25,10 @@ Suite à cela, sur le site on rendra possible l'analyse des écarts, Greeks, une
 ## 2.2 Hors-scope MVP
 - Options américaines / exotiques, modèles de volatilité stochastique, scraping auto des volatilités implicites.
 
--
+**Objectifs et utilité (alignés sur l’UI fournie).**  
+L’application, structurée comme dans nos maquettes (sidebar **Monte Carlo Method**, **Black and Scholes Method**, **Binomial Method**), a un double but **pédagogique** et **pratique**. Depuis les mêmes **inputs** (ticker, période, call/put, **Strike Price**, **Discount Rate**, **Volatility**) et des champs **spécifiques** à chaque page (**Number of Simulation** pour Monte Carlo, **Maturity** pour Black-Scholes, **Steps** pour Binomial), l’utilisateur lance deux parcours : **Price by time** (graphique d’historique à gauche) pour visualiser et contextualiser le sous-jacent, puis **Simulation** (panneau de droite) pour calculer et afficher **prix** et **graphiques clés** (payoff, trajectoires MC, convergence avec #paths/#steps, puis Greeks sur BS). Cette mise en parallèle rend visibles les **hypothèses** (GBM, volatilité), les **compromis précision/temps de calcul** et la **cohérence entre méthodes**. Elle sert à **comparer** rapidement les approches, **explorer des scénarios** (variations de \(K, T, \sigma, r\)) et **choisir la méthode** adaptée au contexte. Les données sont **téléchargées de façon programmatique** (reproductibilité) et mises en cache pour une UX fluide. *Mid-term : le flux « Price by time » et le squelette des pages sont démontrés ; les calculs complets (prix/Greeks) sont finalisés pour le livrable final.*
+
+
 # 3) Architecture du projet
 
 ## 3.1 Arborescence 
