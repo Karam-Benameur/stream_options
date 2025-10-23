@@ -119,3 +119,54 @@ UI → Data : récupère les prix (avec cache).
 Core → Greeks/Plots : calcule greeks, renvoie des objets/figures.
 
 QA : tests locaux (pytest), exécutés automatiquement par GitHub Actions.
+
+# 6) Choix des packages et justifications
+
+Tech stack & pourquoi ces choix
+
+streamlit — UI rapide et reproductible :
+Permet de construire l’interface (sidebar, pages “Monte Carlo / Black-Scholes / Binomial”, formulaires d’entrée, affichage des graphiques) en quelques lignes. Cache intégré (st.cache_data) pour éviter de recharger les données à chaque interaction. (Alternatives : Dash, Gradio ; Streamlit est plus simple et suffit pour notre MVP.)
+
+numpy — calcul numérique vectorisé :
+Simulation des trajectoires GBM en Monte Carlo, opérations vectorielles dans l’arbre binomial, calculs intermédiaires (log, exp, racines) pour 
+𝑑
+1
+,
+𝑑
+2
+d
+1
+	​
+
+,d
+2
+	​
+
+ de Black-Scholes. Réduit le temps de calcul vs. boucles Python pures.
+
+pandas — séries temporelles & préparation des données :
+Gestion des prix historiques (index temps), resampling, jointures éventuelles, calcul de rendements et de volatilité historique, traitement des valeurs manquantes avant le pricing.
+
+scipy — fonctions statistiques et outils numériques :
+scipy.stats.norm.cdf/pdf pour Black-Scholes (loi normale), éventuellement optimize (recherche de racines / calibration de volatilité implicite) et interp si besoin. Évite de re-coder des briques mathématiques sensibles.
+
+yfinance — téléchargement programmatique des prix :
+Récupère les séries OHLCV d’un ticker sur une période donnée. Assure la reproductibilité (scriptable, pas de téléchargement manuel) et alimente les pages “Price by time”. (On pourra cacher les résultats localement.)
+
+matplotlib — graphiques de base & figures statiques :
+Payoff call/put, courbes de convergence (prix vs #pas/#trajectoires), exports d’images simples pour le dossier roadmap/pictures.
+
+plotly — graphiques interactifs dans l’UI :
+Zoom, hover, tooltips dans Streamlit pour les trajectoires Monte Carlo et les historiques de prix. Améliore l’explicabilité et la démonstration en séance.
+
+pytest — tests unitaires & non-régression :
+Vérifie (i) que le prix binomial converge vers Black-Scholes, (ii) que des propriétés de monotonie tiennent (ex. prix ↑ quand σ ↑), (iii) que les fonctions lèvent les bonnes erreurs. Base de la CI.
+
+black / isort / flake8 — qualité & standard PEP8 :
+Mise en forme automatique (black), import triés (isort), règles de lint (flake8). Garantit un code lisible, cohérent entre contributeurs et facile à relire par le correcteur.
+
+(optionnel) numba — accélération JIT :
+Compile en natif les boucles lourdes (génération de chemins MC, parcours d’un arbre binomial). Gain typique ×5 à ×50 selon la taille (utile pour les démonstrations de performance “Time/Memory efficiency”).
+
+
+
