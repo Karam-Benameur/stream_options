@@ -207,7 +207,9 @@ Core → Greeks/Plots : calcule greeks, renvoie des objets/figures.
 
 QA : tests locaux (pytest), exécutés automatiquement par GitHub Actions.
 
-# 6) Tech stack et justifications
+## 3.2 Pipeline 
+
+# 4) Tech stack et justifications
 
 - **streamlit** — UI rapide et reproductible : construit la barre latérale et les 3 pages (Monte Carlo / Black-Scholes / Binomial) avec peu de code ; cache intégré (`st.cache_data`) pour éviter les rechargements.
 
