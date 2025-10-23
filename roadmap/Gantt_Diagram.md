@@ -6,7 +6,7 @@ gantt
 
     section Phase 0 – Infra
     GitHub creation                     :s1, 2025-09-18, 1d
-    Brainstroming                       :s2, 2025-10-01, 10d
+    Brainstroming                       :s2, 2025-09-20, 25d
     Snapshot (README+images+Gantt)      :s3, 2025-10-21, 4d
     Repo & branches (.gitignore, PR)    :s4, 2025-10-22, 1d
     Gantt_Diagram                       :s5, 2025-10-21, 1d
