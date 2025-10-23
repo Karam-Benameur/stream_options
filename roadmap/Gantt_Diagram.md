@@ -13,7 +13,7 @@ gantt
     Gantt_Diagram                       :s5, 2025-10-21, 1d
 
     section Phase 1 – Données & Calib
-    yfinance + cache                     :d1, after s2, 2d
+    yfinance + cache                     :d1, after s5, 2d
     Prétraitement (S0, calendrier, rf)   :d2, after d1, 2d
     Sigma hist & EWMA (comparatif)       :d3, after d2, 3d
     Tests data (fixtures)                :d4, after d3, 1d
