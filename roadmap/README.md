@@ -30,13 +30,6 @@ Suite à cela, sur le site on rendra possible l'analyse des écarts, Greeks, une
 
 ## 3.1 Arborescence 
 
-
-## 3.2. Pile technologique
-- **Python 3.11+**
-- **Streamlit** (UI), **yfinance** (données Yahoo), **NumPy / SciPy / pandas**
-- **plotly** (graphiques interactifs), **joblib** (cache)
-- **pytest** (tests), **ruff/black** (lint/format)
-
 ``` mermaid
 flowchart LR
   %% UI
