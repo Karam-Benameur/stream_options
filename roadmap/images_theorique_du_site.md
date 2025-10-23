@@ -1,4 +1,4 @@
-# Résultats en images
+# Image Results
 
 ## Interface 1
 
@@ -6,14 +6,14 @@
 
 ## Interface 2
 
-![Black Scholes](pictures/2.png)
+![Monte Carlo Method](pictures/2.png)
 
 ## Interface 3
 
-![Binomial](pictures/vagabond-manga-water-sword-training-nppmzivjjqcvpun2.jpg)
+![Black and Scholes Method](pictures/3.png)
 
 ## Interface 4
 
-![Monte Carlo](pictures/vagabond-manga-water-sword-training-nppmzivjjqcvpun2.jpg)
+![Binomial Method](pictures/4.png)
 
 
