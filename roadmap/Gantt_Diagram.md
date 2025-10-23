@@ -8,12 +8,12 @@ gantt
     GitHub creation                     :s1, 2025-09-18, 1d
     Brainstroming                       :s2, 2025-09-20, 25d
     Skeleton of the project             :s3, 2025-10-15, 6d
-    Snapshot (README+images+Gantt)      :s3, 2025-10-21, 4d
-    Repo & branches (.gitignore, PR)    :s4, 2025-10-22, 1d
-    Gantt_Diagram                       :s5, 2025-10-21, 1d
+    Snapshot (README+images+Gantt)      :s4, 2025-10-21, 4d
+    Repo & branches (.gitignore, PR)    :s5, 2025-10-22, 1d
+    Gantt_Diagram                       :s6, 2025-10-21, 1d
 
     section Phase 1 – Données & Calib
-    yfinance + cache                     :d1, after s5, 2d
+    yfinance + cache                     :d1, after s4, 2d
     Prétraitement (S0, calendrier, rf)   :d2, after d1, 2d
     Sigma hist & EWMA (comparatif)       :d3, after d2, 3d
     Tests data (fixtures)                :d4, after d3, 1d
