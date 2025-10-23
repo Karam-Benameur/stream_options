@@ -261,3 +261,13 @@ QA : tests locaux (pytest), exécutés automatiquement par GitHub Actions.
 **Reproductibilité** : pas de données brutes dans Git → **cache local** (`data/*.parquet`) + `st.cache_data` côté UI.
 
 ---
+
+# 6) Member taks
+
+| Membre  | Rôle principal         | Branches                     |
+| ------- | ---------------------- | ---------------------------- |
+| <Nom 1> | Data IO & cache        | `feature/data-io`            |
+| <Nom 2> | Black-Scholes + Greeks | `feature/black-scholes`      |
+| <Nom 3> | Binomial (convergence) | `feature/binomial`           |
+| <Nom 4> | Monte Carlo (paths/IC) | `feature/monte-carlo`        |
+| <Nom 5> | UI Streamlit & docs    | `feature/ui`, `docs/roadmap` |
