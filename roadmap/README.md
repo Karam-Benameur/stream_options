@@ -232,5 +232,54 @@ QA : tests locaux (pytest), exécutés automatiquement par GitHub Actions.
 - **numba** *(optionnel)* — accélération JIT : compile les boucles lourdes (MC / binomial) et peut apporter des gains ×5 à ×50 ; utile pour le critère “Time/Memory efficiency”.
 
 
+# 5) Bases de données (choix & pourquoi)
 
+| Source / Base             | À quoi ça sert dans l’app (référence aux écrans)                                                | Pourquoi ce choix (mid-term)                          | Implémentation prévue |
+|---|---|---|---|
+| **Yahoo Finance** (via `yfinance`) | **Price by time** (graphe de gauche) ; donne le **prix spot S₀** et l’historique pour estimer une **volatilité historique** | Gratuit, simple, scriptable → reproductible           | `core/io.py::fetch_prices()` + cache `.parquet` |
+| **Taux sans risque** (placeholder) | Champ **Discount Rate (r)** des 3 pages (valeur fixe mid-term)                         | Suffisant au mid-term ; API au **final**              | `core/io.py::risk_free_rate()` (USD→2%, EUR→1%) |
+| *(Optionnel final)* **FRED/ECB**   | Remplacer **r** par un **taux de marché** (USD/EUR)                                     | Source officielle, API stable                         | `core/io.py::fetch_risk_free_*()` (final) |
+| *(Optionnel final)* **Option chain** (yfinance) | Comparer **prix modèle** vs **prix marché** (sanity check)                         | Utile pour l’évaluation, pas requis mid-term          | `core/io.py::fetch_option_chain()` (final) |
+| *(Optionnel)* **Calendrier boursier** (`pandas-market-calendars`) | Nettoyer les jours non-trading si besoin                                          | Pour éviter les trous de calendrier                    | `utils/dates.py` (final/si nécessaire) |
+
+**Schéma des champs (Yahoo Finance)** : `Date (index UTC)`, `Open`, `High`, `Low`, `Close` (ou `Adj Close` → **Close**), `Volume`, `ret`, `logret`.  
+**Suffixes utiles** : Euronext Paris = `.PA` (`BNP.PA`), indices parfois `^GSPC`, `^FCHI`, etc.  
+**Reproductibilité** : pas de données brutes dans Git → **cache local** (`data/*.parquet`) + `st.cache_data` côté UI.
+
+---
+
+# 6) Coding pipeline (aligné sur l’UI)
+
+### Vue d’ensemble (runtime)
+1. **Entrées utilisateur** (communes) : *Ticker*, *Start/End*, *Call/Put*, *Strike K*, *Discount Rate r*, *Volatility σ*.  
+2. **Fetch & préparation des données** : `fetch_prices()` → index UTC trié, `ret`/`logret`, cache `.parquet`.  
+3. **Price by time** *(bouton gauche)* : on trace l’historique (Close) du sous-jacent.  
+4. **Paramétrage** : on construit `OptionPricer(s0, K, r, σ, T, kind)` (avec `T` saisi sur la page BS, ou déduit).  
+5. **Routing par page** :
+   - **Monte Carlo** : lire **Number of Simulation** → `pricer.monte_carlo(paths)` → **prix MC + IC95%** → **trajectoires / convergence**.
+   - **Black-Scholes** : lire **Maturity (T)** → `pricer.black_scholes()` → **prix BS** + **Greeks** → **payoff**.
+   - **Binomial** : lire **Steps** → `pricer.binomial(steps)` → **prix binomial** → **convergence vers BS** quand Steps↑.
+6. **Visualisation** : `utils/plotting.py` génère **Payoff**, **Paths/Convergence**, **Greeks** (si affichés).  
+7. **Sorties** : afficher **prix**, **IC (MC)**, **Greeks (BS)**, et les graphiques ; enregistrer les figures (si besoin) dans `roadmap/pictures/`.  
+8. **(Final)** Qualité : tests `pytest`, CI GitHub Actions, perf (temps/mémoire), doc auto.
+
+### Contrat de fonctions (mid-term = stubs OK)
+```python
+# core/io.py
+fetch_prices(ticker:str, start:str, end:str, interval:str="1d") -> pd.DataFrame
+risk_free_rate(currency:str="USD") -> float  # placeholder mid-term
+
+# core/pricing.py
+class OptionPricer:
+    __init__(s0:float, k:float, r:float, sigma:float, T:float, kind:str="call")
+    black_scholes() -> dict  # {price: float, greeks: dict}   (final)
+    binomial(steps:int=200) -> dict  # {price: float, conv_info: dict} (final)
+    monte_carlo(paths:int=10_000) -> dict  # {price: float, ci:(low,high)} (final)
+
+# utils/plotting.py
+plot_price_history(df) -> Figure
+plot_payoff(k, kind) -> Figure
+plot_mc_paths(paths_array) -> Figure
+plot_convergence(x, y) -> Figure
+```
 
