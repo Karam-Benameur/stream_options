@@ -80,3 +80,10 @@ flowchart LR
   CI --> T
 
 ```
+UI → Core : les pages appellent les méthodes de pricing.
+
+UI → Data : récupère les prix (avec cache).
+
+Core → Greeks/Plots : calcule greeks, renvoie des objets/figures.
+
+QA : tests locaux (pytest), exécutés automatiquement par GitHub Actions.
