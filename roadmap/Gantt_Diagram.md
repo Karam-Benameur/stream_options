@@ -13,7 +13,7 @@ gantt
 
     section Phase 1 – Données & Calib
     yfinance + cache                     :d1, after s4, 2d
-    Prétraitement (S0, calendrier, rf)   :d2, after d1, 2d
+    Pre-traitement (S0, calendrier, rf)  :d2, after d1, 2d
     Sigma hist & EWMA (comparatif)       :d3, after d2, 3d
     Tests data (fixtures)                :d4, after d3, 1d
     M1 Données prêtes                    :milestone, m1, after d4, 0d
