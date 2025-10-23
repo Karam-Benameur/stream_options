@@ -8,6 +8,7 @@ gantt
     .                                   :s1, 2025-10-17, 0d
     Snapshot (README+images+Gantt)      :s2, 2025-10-21, 4d
     Repo & branches (.gitignore, PR)    :s3, 2025-10-22, 1d
+    Gantt_Diagram                       :s4, 2025-10-21, 1d
 
     section Phase 1 – Données & Calib
     yfinance + cache                     :d1, after s2, 2d
