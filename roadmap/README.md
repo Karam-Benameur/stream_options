@@ -15,18 +15,83 @@ Suite à cela, sur le site on rendra possible l'analyse des écarts, Greeks, une
 
 # 2) Objectifs et utilité
 
-## 2.1 Objectif utilisateur
-- Saisir un **ticker** (ex. `AAPL`), **strike K**, **échéance T**, **r**, **dividendes q** (ou 0).
-- Récupérer les **données Yahoo Finance** (spot, historique, dividendes).
-- **Calibrer σ** (vol historique simple ou EWMA) ou saisir une **vol implicite** manuelle.
-- **Tarifer** l’option européenne **Call/Put** par **3 méthodes** : Black-Scholes (fermé), **Binomial CRR**, **Monte-Carlo**.
-- Afficher **prix + Greeks (Δ, Γ, Θ, 𝑽, ρ)**, **écarts entre méthodes**, **temps de calcul**, **IC 95% MC**.
-- Visualiser la **convergence** (Binomial: prix vs nombre de pas N; MC: prix & IC vs nombre de 
-## 2.2 Hors-scope MVP
-- Options américaines / exotiques, modèles de volatilité stochastique, scraping auto des volatilités implicites.
-
-**Objectifs et utilité (alignés sur l’UI fournie).**  
 L’application, structurée comme dans nos maquettes (sidebar **Monte Carlo Method**, **Black and Scholes Method**, **Binomial Method**), a un double but **pédagogique** et **pratique**. Depuis les mêmes **inputs** (ticker, période, call/put, **Strike Price**, **Discount Rate**, **Volatility**) et des champs **spécifiques** à chaque page (**Number of Simulation** pour Monte Carlo, **Maturity** pour Black-Scholes, **Steps** pour Binomial), l’utilisateur lance deux parcours : **Price by time** (graphique d’historique à gauche) pour visualiser et contextualiser le sous-jacent, puis **Simulation** (panneau de droite) pour calculer et afficher **prix** et **graphiques clés** (payoff, trajectoires MC, convergence avec #paths/#steps, puis Greeks sur BS). Cette mise en parallèle rend visibles les **hypothèses** (GBM, volatilité), les **compromis précision/temps de calcul** et la **cohérence entre méthodes**. Elle sert à **comparer** rapidement les approches, **explorer des scénarios** (variations de \(K, T, \sigma, r\)) et **choisir la méthode** adaptée au contexte. Les données sont **téléchargées de façon programmatique** (reproductibilité) et mises en cache pour une UX fluide. *Mid-term : le flux « Price by time » et le squelette des pages sont démontrés ; les calculs complets (prix/Greeks) sont finalisés pour le livrable final.*
+
+## 2.1 Comment ça se passe ?
+
+### 1) Étapes communes (toutes les pages)
+1. **Select Ticker** : entre le symbole (ex. `AAPL`, `BNP.PA`, `^GSPC`).
+2. **Start date / End date** : choisis la période d’historique.
+3. **Call or Put** : sélectionne le type d’option.
+4. **Strike Price (K)** : saisis le strike.
+5. **Discount Rate (r)** : taux sans risque (ex. `0.02` = 2%).
+6. **Volatility (σ)** : valeur choisie ou issue d’une estimation (historique).
+7. Clique **Price by time** pour afficher l’historique du sous-jacent (graphe de gauche).
+
+**Recommandations**
+- σ typique entre **0.10** et **0.60** ; r entre **0.00** et **0.05**.  
+- Si tu n’es pas sûr de σ, commence par **Price by time**, observe la variabilité, puis ajuste.
+
+---
+
+### 2) Particularités par méthode (champs spécifiques)
+
+- **Monte Carlo Method**
+  - **Number of Simulation** : nombre de trajectoires (ex. 10 000 → 50 000).
+  - *(optionnel)* **Seed** : pour reproduire exactement le résultat.
+- **Black and Scholes Method**
+  - **Maturity (T)** : maturité **en années** (ex. `0.5` = 6 mois).
+  - (Greeks calculés à partir des mêmes entrées communes.)
+- **Binomial Method**
+  - **Steps** : nombre d’étapes de l’arbre (ex. 100 → 500).  
+    Plus c’est grand, plus le prix **converge** vers Black-Scholes.
+
+---
+
+### 3) Ce que tu obtiens selon la méthode
+
+- **Monte Carlo**
+  - **Option price (MC)** + **IC 95%** (intervalle de confiance).
+  - **Simulated paths** (trajectoires) et/ou **Convergence** (prix vs #paths).
+  - **Payoff** à l’échéance.
+- **Black-Scholes**
+  - **Option price (BS)** (référence fermée).
+  - **Greeks** : Delta, Gamma, Vega, Theta, Rho.
+  - **Payoff** avec repère du strike.
+- **Binomial**
+  - **Option price (Binomial)**.
+  - **Convergence** du prix quand **Steps** augmente (doit tendre vers BS).
+
+> Dans tous les cas, le graphe **Price by time** (gauche) montre l’historique du sous-jacent pour contextualiser la période choisie.
+
+---
+
+### 4) Comment prendre une décision (playbook rapide)
+
+1. **Valide les données** : via **Price by time**, vérifie que la période est cohérente (pas d’anomalies évidentes).
+2. **Choisis/ajuste σ** :
+   - Démarre avec une **vol historique** raisonnable (ex. 20%).
+   - Ajuste σ jusqu’à obtenir une **cohérence** MC / Binomial / BS (écarts faibles).
+3. **Compare les méthodes** :
+   - **BS** = référence rapide pour une européenne sans dividendes.
+   - **Binomial** = contrôle de **convergence** (augmente Steps si besoin).
+   - **MC** = donne un **prix avec marge d’erreur** (IC 95%).
+4. **Si tu as un prix de marché** (option chain) :
+   - Si **Prix_modèle < Prix_marché** → option possiblement **surévaluée**.
+   - Si **Prix_modèle > Prix_marché** → option possiblement **sous-évaluée**.
+5. **Regarde les Greeks (BS)** :
+   - **Delta** (exposition directionnelle), **Vega** (sensibilité à σ), **Theta** (érosion temps).
+   - Choisis **K** et **T** selon ton risque/timing.
+6. **Robustesse** :
+   - **MC** : IC trop large → **augmente** le nombre de simulations.
+   - **Binomial** : prix instable → **augmente** Steps jusqu’à stabilisation.
+
+**Valeurs guidées**
+- **Volatility (σ)** : 0.20 pour démarrer, puis ajuste.
+- **Discount Rate (r)** : 0.02 (USD) / 0.01 (EUR) par défaut.
+- **Maturity (T)** : 0.25 / 0.5 / 1.0 (trimestre / semestre / 1 an).
+- **Number of Simulation (MC)** : 10 000 → 50 000.
+- **Steps (Binomial)** : 100 → 500 (voire 1000 si besoin de stabilité).
 
 
 # 3) Architecture du projet
