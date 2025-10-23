@@ -39,33 +39,32 @@ Suite à cela, sur le site on rendra possible l'analyse des écarts, Greeks, une
 
 ``` mermaid
 flowchart LR
-  subgraph UI[UI – Streamlit]
-    P1[Page 1: Monte Carlo]
-    P2[Page 2: Black–Scholes]
-    P3[Page 3: Binomial]
+  subgraph UI ["UI - Streamlit"]
+    P1["Page 1: Monte Carlo"]
+    P2["Page 2: Black-Scholes"]
+    P3["Page 3: Binomial"]
   end
 
-  subgraph CORE[Core – Pricing & Greeks]
-    PR[OptionPricer<br/>(black_scholes, binomial, monte_carlo)]
-    GR[Greeks<br/>(delta, gamma, vega...)]
+  subgraph CORE ["Core - Pricing & Greeks"]
+    PR["OptionPricer\n(black_scholes, binomial, monte_carlo)"]
+    GR["Greeks\n(delta, gamma, vega, ...)"]
   end
 
-  subgraph DATA[Data – IO & Cache]
-    IO[fetch_prices(ticker, start, end)]
-    C[(Local cache)]
-    API[(Yahoo Finance)]
+  subgraph DATA ["Data - IO & Cache"]
+    IO["fetch_prices(ticker, start, end)"]
+    C[("Local cache")]
+    API[("Yahoo Finance")]
   end
 
-  subgraph VIZ[Visualization – Utils]
-    PL[plotting.py<br/>(payoff, paths, convergence)]
+  subgraph VIZ ["Visualization - Utils"]
+    PL["plotting.py\n(payoff, paths, convergence)"]
   end
 
-  subgraph QA[Quality]
-    T[pytest]
-    CI[GitHub Actions<br/>(tests + lint)]
+  subgraph QA ["Quality"]
+    T["pytest"]
+    CI["GitHub Actions\n(tests + lint)"]
   end
 
-  %% Flux
   P1 --> PR
   P2 --> PR
   P3 --> PR
@@ -79,4 +78,5 @@ flowchart LR
   UI --> PL
   T --> PR
   CI --> T
+
 ```
