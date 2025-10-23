@@ -8,7 +8,7 @@ gantt
     Brainstroming (ideas of the subject):s2, 2025-09-20, 25d
     Skeleton of the project             :s3, 2025-10-15, 6d
     Snapshot (README+images+Gantt)      :s4, 2025-10-21, 4d
-    Repo & branches                     :s5, 2025-10-22, 1d
+    Repo & branches                     :s5, 2025-10-24, 1d
     Gantt_Diagram                       :s6, 2025-10-21, 1d
 
     section Phase 1 – Données & Calib
