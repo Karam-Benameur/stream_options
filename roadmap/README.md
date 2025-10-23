@@ -39,45 +39,77 @@ Suite à cela, sur le site on rendra possible l'analyse des écarts, Greeks, une
 
 ``` mermaid
 flowchart LR
-  subgraph UI ["UI - Streamlit"]
-    P1["Page 1: Monte Carlo"]
-    P2["Page 2: Black-Scholes"]
-    P3["Page 3: Binomial"]
+  %% UI
+  subgraph UI ["UI - Streamlit app"]
+    NAV["Sidebar router\n(Monte Carlo | Black-Scholes | Binomial)"]
+    IN_COMMON["Inputs communs\n(ticker, start/end, call/put, strike K, rate r, vol σ)"]
+    IN_SPEC["Inputs spécifiques\n(MC: paths • BS: maturity • Binomial: steps)"]
+    ACTIONS["Actions\n(Price by time • Simulation)"]
+    PLOTS["Plots panel\n(Time series • Payoff • Paths/Convergence)"]
   end
 
-  subgraph CORE ["Core - Pricing & Greeks"]
-    PR["OptionPricer\n(black_scholes, binomial, monte_carlo)"]
-    GR["Greeks\n(delta, gamma, vega, ...)"]
-  end
-
-  subgraph DATA ["Data - IO & Cache"]
-    IO["fetch_prices(ticker, start, end)"]
-    C[("Local cache")]
+  %% Data services
+  subgraph DATA ["Services - Data"]
+    FETCH["fetch_prices(ticker, dates)"]
+    VOL["Volatility estimator\n(historique; implied plus tard)"]
+    CACHE[("st.cache_data / local cache")]
     API[("Yahoo Finance")]
   end
 
-  subgraph VIZ ["Visualization - Utils"]
-    PL["plotting.py\n(payoff, paths, convergence)"]
+  %% Core pricing
+  subgraph CORE ["Core - Pricing"]
+    PRICER["OptionPricer class"]
+    BS["Engine: Black-Scholes"]
+    BINOM["Engine: Binomial"]
+    MC["Engine: Monte Carlo"]
+  end
+
+  %% Analytics & viz
+  subgraph ANALYTICS ["Analytics"]
+    GREEKS["Greeks\n(delta, gamma, vega, theta, rho)"]
+    COMP["Compare methods\n(BS vs Binomial vs MC)"]
+  end
+
+  subgraph VIZ ["Visualization utils"]
+    PLOTUTILS["plotting.py\n(payoff, paths, convergence)"]
   end
 
   subgraph QA ["Quality"]
-    T["pytest"]
+    TESTS["pytest"]
     CI["GitHub Actions\n(tests + lint)"]
   end
 
-  P1 --> PR
-  P2 --> PR
-  P3 --> PR
-  P1 --> IO
-  P2 --> IO
-  P3 --> IO
-  PR --> GR
-  PR --> PL
-  IO --> C
-  IO --> API
-  UI --> PL
-  T --> PR
-  CI --> T
+  %% Flows
+  NAV --> IN_COMMON
+  IN_COMMON --> IN_SPEC
+  IN_COMMON --> FETCH
+  IN_SPEC --> PRICER
+  ACTIONS --> FETCH
+  ACTIONS --> PRICER
+
+  FETCH --> CACHE
+  FETCH --> API
+  FETCH --> VOL
+  VOL --> PRICER
+
+  PRICER --> BS
+  PRICER --> BINOM
+  PRICER --> MC
+
+  BS --> GREEKS
+  BINOM --> COMP
+  MC --> COMP
+
+  BS --> PLOTUTILS
+  BINOM --> PLOTUTILS
+  MC --> PLOTUTILS
+  PLOTUTILS --> PLOTS
+  GREEKS --> PLOTS
+  COMP --> PLOTS
+
+  TESTS --> CORE
+  CI --> TESTS
+
 
 ```
 UI → Core : les pages appellent les méthodes de pricing.
