@@ -105,6 +105,32 @@ flowchart LR
 
 
 ```
+
+### Architecture (Mid-term)
+```mermaid
+flowchart LR
+  subgraph UI ["UI - Streamlit (3 pages)"]
+    NAV["Sidebar (MC | BS | Binomial)"]
+    IN["Inputs communs + spécifiques"]
+    PLOTS["Zone de graphiques (time series / payoff / paths)"]
+  end
+  subgraph DATA ["Data IO"]
+    F["fetch_prices() (yfinance ou démo)"]
+    CACHE[("cache local / st.cache_data")]
+  end
+  subgraph CORE ["Core"]
+    PR["OptionPricer (stubs)"]
+  end
+  subgraph QA ["Qualité"]
+    TESTS["pytest (stubs)"]
+  end
+  NAV --> IN --> PR
+  IN --> F --> CACHE
+  PR --> PLOTS
+  TESTS --> PR
+```
+
+
 UI → Core : les pages appellent les méthodes de pricing.
 
 UI → Data : récupère les prix (avec cache).
