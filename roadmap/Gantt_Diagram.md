@@ -5,7 +5,7 @@ gantt
 
     section Phase 0 – Structure 
     GitHub creation                     :s1, 2025-09-18, 1d
-    Brainstroming                       :s2, 2025-09-20, 25d
+    Brainstroming (ideas of the subject):s2, 2025-09-20, 25d
     Skeleton of the project             :s3, 2025-10-15, 6d
     Snapshot (README+images+Gantt)      :s4, 2025-10-21, 4d
     Repo & branches                     :s5, 2025-10-22, 1d
