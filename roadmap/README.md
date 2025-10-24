@@ -297,9 +297,9 @@ flowchart TB
 | Source / Base             | À quoi ça sert dans l’app (référence aux écrans)                                                | Pourquoi ce choix (mid-term)                          | Implémentation prévue |
 |---|---|---|---|
 | **Yahoo Finance** (via `yfinance`) | **Price by time** (graphe de gauche) ; donne le **prix spot S₀** et l’historique pour estimer une **volatilité historique** | Gratuit, simple, scriptable → reproductible           | `core/io.py::fetch_prices()` + cache `.parquet` |
-| **Taux sans risque** (placeholder) | Champ **Discount Rate (r)** des 3 pages (valeur fixe mid-term)                         | Suffisant au mid-term ; API au **final**              | `core/io.py::risk_free_rate()` (USD→2%, EUR→1%) |
-| *(Optionnel final)* **FRED/ECB**   | Remplacer **r** par un **taux de marché** (USD/EUR)                                     | Source officielle, API stable                         | `core/io.py::fetch_risk_free_*()` (final) |
-| *(Optionnel final)* **Option chain** (yfinance) | Comparer **prix modèle** vs **prix marché** (sanity check)                         | Utile pour l’évaluation, pas requis mid-term          | `core/io.py::fetch_option_chain()` (final) |
+| *(Optionnel)***Taux sans risque** (placeholder) | Champ **Discount Rate (r)** des 3 pages (valeur fixe mid-term)                         | Suffisant au mid-term ; API au **final**              | `core/io.py::risk_free_rate()` (USD→2%, EUR→1%) |
+| *(Optionnel)* **FRED/ECB**   | Remplacer **r** par un **taux de marché** (USD/EUR)                                     | Source officielle, API stable                         | `core/io.py::fetch_risk_free_*()` (final) |
+| *(Optionnel)* **Option chain** (yfinance) | Comparer **prix modèle** vs **prix marché** (sanity check)                         | Utile pour l’évaluation, pas requis mid-term          | `core/io.py::fetch_option_chain()` (final) |
 | *(Optionnel)* **Calendrier boursier** (`pandas-market-calendars`) | Nettoyer les jours non-trading si besoin                                          | Pour éviter les trous de calendrier                    | `utils/dates.py` (final/si nécessaire) |
 
 **Schéma des champs (Yahoo Finance)** : `Date (index UTC)`, `Open`, `High`, `Low`, `Close` (ou `Adj Close` → **Close**), `Volume`, `ret`, `logret`.  
