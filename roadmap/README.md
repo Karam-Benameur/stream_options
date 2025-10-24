@@ -97,9 +97,7 @@ L’application, structurée comme dans nos maquettes (sidebar **Monte Carlo Met
 # 3) Architecture du projet
 
 ``` mermaid
-## Architecture (avec aller-retour Inputs ↔ Data IO & Cache)
 
-```mermaid
 flowchart TB
   %% --- Entrée utilisateur ---
   U["Utilisateur"]
