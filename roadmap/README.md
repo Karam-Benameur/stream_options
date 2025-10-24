@@ -2,7 +2,7 @@
 
 # Projet Logiciel Gr.5:" StreamOptions — Tarification d’options européennes (BS / Binomial / Monte-Carlo)"
 Auteurs:
-  - Ayoub MALOUM
+  - Ayoub MALOUM 22515204
   - Esperance DJOSSOU 22510550
   - Karam BENAMEUR 22201020
 
@@ -10,14 +10,13 @@ Auteurs:
 # 1) Nom du projet et idée du concept
 
 **Nom du module** : `stream_options`  
-**Idée** : Ce projet consiste à user de Streamlit pour calibrer et comparer le prix d’options européennes (call/put) via 3 différentes méthodes qui sont: Black-Scholes, Binomial et Monte-Carlo.
-Suite à cela, sur le site on rendra possible l'analyse des écarts, Greeks, une étude des convergences et d'incertitude.
+**Idée** : Ce projet consiste à créer un site en utilisant Streamlit pour le pricing d'options européennes (call/put) comparant trois modèles : Black-Scholes, Binomial et Monte-Carlo. L'outil intégrera également l'analyse des écarts de prix, le calcul des Greeks, et l'étude de la convergence des méthodes numériques.
 
 ---
 
 # 2) Objectifs et utilité
 
-L’application, structurée comme dans nos maquettes (sidebar **Monte Carlo Method**, **Black and Scholes Method**, **Binomial Method**), a un double but **pédagogique** et **pratique**. Depuis les mêmes **inputs** (ticker, période, call/put, **Strike Price**, **Discount Rate**, **Volatility**) et des champs **spécifiques** à chaque page (**Number of Simulation** pour Monte Carlo, **Maturity** pour Black-Scholes, **Steps** pour Binomial), l’utilisateur lance deux parcours : **Price by time** (graphique d’historique à gauche) pour visualiser et contextualiser le sous-jacent, puis **Simulation** (panneau de droite) pour calculer et afficher **prix** et **graphiques clés** (payoff, trajectoires MC, convergence avec #paths/#steps, puis Greeks sur BS). Cette mise en parallèle rend visibles les **hypothèses** (GBM, volatilité), les **compromis précision/temps de calcul** et la **cohérence entre méthodes**. Elle sert à **comparer** rapidement les approches, **explorer des scénarios** (variations de \(K, T, \sigma, r\)) et **choisir la méthode** adaptée au contexte. Les données sont **téléchargées de façon programmatique** (reproductibilité) et mises en cache pour une UX fluide. *Mid-term : le flux « Price by time » et le squelette des pages sont démontrés ; les calculs complets (prix/Greeks) sont finalisés pour le livrable final.*
+L’application, structurée comme dans nos maquettes (sidebar **Monte Carlo Method**, **Black and Scholes Method**, **Binomial Method**), a un double but **pédagogique** et **pratique**. Depuis les mêmes **inputs** (ticker, période, call/put, **Strike Price**, **Discount Rate**, **Volatility**) et des champs **spécifiques** à chaque page, l’utilisateur lance deux parcours : **Price by time** (graphique d’historique à gauche) pour visualiser et contextualiser le sous-jacent, puis **Simulation** (panneau de droite) pour calculer et afficher **prix** et **graphiques clés** (payoff, trajectoires MC, convergence avec #paths/#steps, puis Greeks sur BS). Cette mise en parallèle rend visibles les **hypothèses** (GBM, volatilité), les **compromis précision/temps de calcul** et la **cohérence entre méthodes**. Elle sert à **comparer** rapidement les approches, **explorer des scénarios** (variations de \(K, T, \sigma, r\)) et **choisir la méthode** adaptée au contexte. Les données sont **téléchargées de façon programmatique** (reproductibilité) et mises en cache pour une UX fluide. *Mid-term : le flux « Price by time » et le squelette des pages sont démontrés ; les calculs complets (prix/Greeks) sont finalisés pour le livrable final.*
 
 ## 2.1) Comment ça se passe ?
 
@@ -315,7 +314,7 @@ flowchart TB
 | Membre          | Rôle principal         | Branches                     |
 | --------------- | ---------------------- | ---------------------------- |
 | Karam           | Data IO & cache        | `feature/data-io`            |
-| Ayoub           | Black-Scholes + Greeks | `feature/black-scholes`      |
-| Esperance       | Binomial (convergence) | `feature/binomial`           |
+| Esperance       | Black-Scholes + Greeks | `feature/black-scholes`      |
+| Ayoub           | Binomial (convergence) | `feature/binomial`           |
 | Karam           | Monte Carlo (paths/IC) | `feature/monte-carlo`        |
 | Esperance/Ayoub | UI Streamlit & docs    | `feature/ui`                 |
