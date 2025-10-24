@@ -318,4 +318,4 @@ flowchart TB
 | <Nom 2> | Black-Scholes + Greeks | `feature/black-scholes`      |
 | <Nom 3> | Binomial (convergence) | `feature/binomial`           |
 | <Nom 4> | Monte Carlo (paths/IC) | `feature/monte-carlo`        |
-| <Nom 5> | UI Streamlit & docs    | `feature/ui`, `docs/roadmap` |
+| <Nom 5> | UI Streamlit & docs    | `feature/ui`                 |
