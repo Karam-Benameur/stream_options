@@ -120,49 +120,7 @@ gantt
 
 
 
-gantt
-    title Diagramme de Gantt - Projet StreamOptions
-    dateFormat  YYYY-MM-DD
-    axisFormat %d/%m
-    
-    section Architecture & Setup
-    Configuration environnement      :done,    env_setup, 2024-01-15, 3d
-    Structure du projet              :done,    project_struct, 2024-01-18, 2d
-    Pipeline CI/CD                   :done,    cicd_setup, 2024-01-20, 2d
-    
-    section Core - Data Layer
-    Module IO & Cache (Ayoub)        :active,  data_io, 2024-01-22, 5d
-    Normalisation données            :         data_norm, after data_io, 3d
-    Tests Data Layer                 :         test_data, after data_norm, 2d
-    
-    section Méthodes de Pricing
-    Black-Scholes (Esperance)        :         bs_impl, 2024-01-29, 6d
-    Greeks Calculation               :         bs_greeks, after bs_impl, 4d
-    Tests BS                         :         test_bs, after bs_greeks, 2d
-    
-    section Méthodes Numériques
-    Binomial (Karam)                 :         binom_impl, 2024-02-05, 5d
-    Monte Carlo (Karam)              :         mc_impl, 2024-02-12, 5d
-    Convergence Analysis             :         convergence, after mc_impl, 3d
-    
-    section Interface Streamlit
-    UI Structure                     :         ui_base, 2024-01-25, 4d
-    Page Monte Carlo                 :         ui_mc, after mc_impl, 3d
-    Page Black-Scholes               :         ui_bs, after bs_greeks, 3d
-    Page Binomial                    :         ui_binom, after binom_impl, 3d
-    
-    section Intégration & Tests
-    Intégration données-pricing      :         integration, 2024-02-19, 4d
-    Tests d'intégration              :         test_integration, after integration, 3d
-    Tests de performance             :         perf_test, after test_integration, 2d
-    
-    section Documentation & Finalisation
-    Documentation technique          :         tech_docs, 2024-02-26, 4d
-    Guide utilisateur                :         user_guide, after tech_docs, 3d
-    Préparation présentation         :         presentation, 2024-03-04, 3d
-    Revue finale                     :         final_review, 2024-03-07, 2d
-
-
+g
 ```
 
 
