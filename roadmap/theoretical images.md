@@ -16,4 +16,6 @@
 
 ![Binomial Method](pictures/4.png)
 
+## Logo
 
+![Stream options](pictures/logo
