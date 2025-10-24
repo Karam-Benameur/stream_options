@@ -26,11 +26,11 @@ L’application, structurée comme dans nos maquettes (sidebar **Monte Carlo Met
 4. **Strike Price (K)** : saisis le strike.
 5. **Discount Rate (r)** : taux sans risque (ex. `0.02` = 2%).
 6. **Volatility (σ)** : valeur choisie ou issue d’une estimation (historique).
-7. Clique **Price by time** pour afficher l’historique du sous-jacent (graphe de gauche).
+7. Cliquer sur **Price by time** pour afficher l’historique du sous-jacent (graphe de gauche).
 
 **Recommandations**
 - σ typique entre **0.10** et **0.60** ; r entre **0.00** et **0.05**.  
-- Si tu n’es pas sûr de σ, commence par **Price by time**, observe la variabilité, puis ajuste.
+- Si pas sûr de σ, commencer par **Price by time**, observe la variabilité, puis ajuster.
 
 ---
 
@@ -38,7 +38,7 @@ L’application, structurée comme dans nos maquettes (sidebar **Monte Carlo Met
 
 - **Monte Carlo Method**
   - **Number of Simulation** : nombre de trajectoires (ex. 10 000 → 50 000).
-  - *(optionnel)* **Seed** : pour reproduire exactement le résultat.
+  - *(optionnel)* **Seed** : pour reproduire exactement le résultat.(A voir si on l'ajoute)
 - **Black and Scholes Method**
   - **Maturity (T)** : maturité **en années** (ex. `0.5` = 6 mois).
   - (Greeks calculés à partir des mêmes entrées communes.)
