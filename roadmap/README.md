@@ -17,9 +17,9 @@ Suite à cela, sur le site on rendra possible l'analyse des écarts, Greeks, une
 
 L’application, structurée comme dans nos maquettes (sidebar **Monte Carlo Method**, **Black and Scholes Method**, **Binomial Method**), a un double but **pédagogique** et **pratique**. Depuis les mêmes **inputs** (ticker, période, call/put, **Strike Price**, **Discount Rate**, **Volatility**) et des champs **spécifiques** à chaque page (**Number of Simulation** pour Monte Carlo, **Maturity** pour Black-Scholes, **Steps** pour Binomial), l’utilisateur lance deux parcours : **Price by time** (graphique d’historique à gauche) pour visualiser et contextualiser le sous-jacent, puis **Simulation** (panneau de droite) pour calculer et afficher **prix** et **graphiques clés** (payoff, trajectoires MC, convergence avec #paths/#steps, puis Greeks sur BS). Cette mise en parallèle rend visibles les **hypothèses** (GBM, volatilité), les **compromis précision/temps de calcul** et la **cohérence entre méthodes**. Elle sert à **comparer** rapidement les approches, **explorer des scénarios** (variations de \(K, T, \sigma, r\)) et **choisir la méthode** adaptée au contexte. Les données sont **téléchargées de façon programmatique** (reproductibilité) et mises en cache pour une UX fluide. *Mid-term : le flux « Price by time » et le squelette des pages sont démontrés ; les calculs complets (prix/Greeks) sont finalisés pour le livrable final.*
 
-## 2.1 Comment ça se passe ?
+## 2.1) Comment ça se passe ?
 
-### 1) Étapes communes (toutes les pages)
+### a) Étapes communes (toutes les pages)
 1. **Select Ticker** : entre le symbole (ex. `AAPL`, `BNP.PA`, `^GSPC`).
 2. **Start date / End date** : choisis la période d’historique.
 3. **Call or Put** : sélectionne le type d’option.
@@ -34,7 +34,7 @@ L’application, structurée comme dans nos maquettes (sidebar **Monte Carlo Met
 
 ---
 
-### 2) Particularités par méthode (champs spécifiques)
+### b) Particularités par méthode (champs spécifiques)
 
 - **Monte Carlo Method**
   - **Number of Simulation** : nombre de trajectoires (ex. 10 000 → 50 000).
@@ -48,7 +48,7 @@ L’application, structurée comme dans nos maquettes (sidebar **Monte Carlo Met
 
 ---
 
-### 3) Ce que tu obtiens selon la méthode
+### c) Ce que tu obtiens selon la méthode
 
 - **Monte Carlo**
   - **Option price (MC)** + **IC 95%** (intervalle de confiance).
@@ -66,7 +66,7 @@ L’application, structurée comme dans nos maquettes (sidebar **Monte Carlo Met
 
 ---
 
-### 4) Comment prendre une décision (playbook rapide)
+### d) Comment prendre une décision (playbook rapide)
 
 1. **Valide les données** : via **Price by time**, vérifie que la période est cohérente (pas d’anomalies évidentes).
 2. **Choisis/ajuste σ** :
@@ -151,19 +151,122 @@ flowchart TB
 
 ```
 
-## Explication/vue d'ensemble
+## 3.1) Explication
 
-1. **Entrées utilisateur** (communes) : *Ticker*, *Start/End*, *Call/Put*, *Strike K*, *Discount Rate r*, *Volatility σ*.  
-2. **Fetch & préparation des données** : `fetch_prices()` → index UTC trié, `ret`/`logret`, cache `.parquet`.  
-3. **Price by time** *(bouton gauche)* : on trace l’historique (Close) du sous-jacent.  
-4. **Paramétrage** : on construit `OptionPricer(s0, K, r, σ, T, kind)` (avec `T` saisi sur la page BS, ou déduit).  
-5. **Routing par page** :
-   - **Monte Carlo** : lire **Number of Simulation** → `pricer.monte_carlo(paths)` → **prix MC + IC95%** → **trajectoires / convergence**.
-   - **Black-Scholes** : lire **Maturity (T)** → `pricer.black_scholes()` → **prix BS** + **Greeks** → **payoff**.
-   - **Binomial** : lire **Steps** → `pricer.binomial(steps)` → **prix binomial** → **convergence vers BS** quand Steps↑.
-6. **Visualisation** : `utils/plotting.py` génère **Payoff**, **Paths/Convergence**, **Greeks** (si affichés).  
-7. **Sorties** : afficher **prix**, **IC (MC)**, **Greeks (BS)**, et les graphiques ; enregistrer les figures (si besoin) dans `roadmap/pictures/`.  
-8. **(Final)** Qualité : tests `pytest`, CI GitHub Actions, perf (temps/mémoire), doc auto.
+### a) Parcours complet — étape par étape (selon le schéma)
+
+1) **Saisie utilisateur**
+   - L’utilisateur tape : **Ticker** (`AAPL`, `BNP.PA`…), **Dates** (Start/End), **Call/Put**, **Strike K**, **Discount rate r**, **Volatility σ**.
+   - Il choisit la page dans la **Sidebar** : **Monte Carlo**, **Black-Scholes** ou **Binomial**.
+
+2) **Envoi vers l’UI (Streamlit)**
+   - Le formulaire **Inputs communs + spécifiques** reçoit ces valeurs.
+   - Si la page sélectionnée exige un champ en plus, il apparaît :
+     - Monte Carlo → **#paths** (Number of Simulation)
+     - Black-Scholes → **T** (Maturity, en années)
+     - Binomial → **Steps** (nombre d’étapes de l’arbre)
+
+3) **Demande de données (aller)**
+   - L’UI appelle **`core/io.py::fetch_prices(ticker, start, end)`** pour récupérer l’historique des prix.
+
+4) **Téléchargement & normalisation**
+   - `fetch_prices` récupère les données (Yahoo Finance si cache manquant), puis **normalise** :
+     - index en **UTC**, colonnes **OHLCV** (Open, High, Low, Close, Volume),
+     - calcul des **retours** : `ret = Close.pct_change()`, `logret = log(C_t/C_{t-1})`,
+     - tri et déduplication.
+
+5) **Cache (retour)**
+   - Les données normalisées sont renvoyées à l’UI **et** stockées :
+     - en **fichier** (`.parquet` dans *Bases de données/*),
+     - en **mémoire** via `st.cache_data` (réutilisation rapide).
+
+6) **Contexte marché (gauche)**
+   - L’UI trace **Price by time** (courbe de Close) dans la **colonne gauche** pour contextualiser la période.
+
+7) **Paramétrage du cœur de calcul**
+   - L’UI construit **`OptionPricer(S0, K, r, σ, T, kind)`** à partir de l’historique (S0 = dernier Close) et des entrées.
+
+8) **Calcul selon la page**
+   - **Monte Carlo** → `monte_carlo(paths)` : simule des trajectoires et renvoie **prix** + **IC95%** (intervalle de confiance).
+   - **Black-Scholes** → `black_scholes()` : renvoie **prix** (formule fermée) + **Greeks** (Delta, Gamma, Vega, Theta, Rho).
+   - **Binomial** → `binomial(steps)` : renvoie **prix** + info de **convergence** (vers BS quand Steps ↑).
+
+9) **Visualisation des résultats (droite)**
+   - `utils/plotting.py` génère les figures :
+     - **payoff** (diagramme de gain/perte),
+     - **mc_paths** (trajectoires simulées) et/ou **convergence** (prix vs #paths/#steps),
+     - éventuellement courbe(s) de **Greeks** (page BS).
+   - L’UI affiche ces résultats dans la **colonne droite** : *Prix + IC/Greeks + Graphiques*.
+
+10) **Décision utilisateur**
+    - **Vérifie** la cohérence : BS (référence) ≈ Binomial (si Steps suffisant), MC dans un **IC** raisonnable.
+    - **Ajuste σ** si besoin (jusqu’à cohérence), puis décide (ex. comparer au **prix de marché** au final).
+
+---
+
+### b) Glossaire des blocs & termes du schéma
+
+#### UI – Streamlit
+- **Sidebar** : menu qui choisit la page **Monte Carlo / Black-Scholes / Binomial**.
+- **Inputs communs** : `ticker`, `start/end`, `call/put`, **K**, **r**, **σ**.  
+- **Inputs spécifiques** :
+  - **T (Maturity)** : temps jusqu’à l’échéance en **années** (ex. 0.5 = 6 mois) — page BS.
+  - **Steps** : granularité de l’arbre binomial — page Binomial.
+  - **#paths** : nombre de trajectoires Monte Carlo — page MC.
+
+#### Data IO & Cache
+- **`core/io.py::fetch_prices()`** : télécharge l’historique (Yahoo Finance), gère erreurs/paramètres, renvoie un **DataFrame prêt à tracer**.
+- **Normalisation** :
+  - **UTC** : dates/horaires standardisés en fuseau **UTC**.
+  - **OHLCV** : colonnes **O**pen, **H**igh, **L**ow, **C**lose, **V**olume.
+  - **ret / logret** : retours simples et logarithmiques pour estimer la volatilité.
+- **Yahoo Finance** : source **gratuite** d’historiques (via package `yfinance`).
+- **Cache local `.parquet`** : fichier compact lisible/écrivible rapidement.
+- **`st.cache_data`** : mémorise en RAM le résultat d’une fonction pour éviter de re-télécharger.
+
+#### Core – Pricing
+- **`pricing.py::OptionPricer`** : classe qui regroupe les paramètres `(S0, K, r, σ, T, kind)` et expose 3 méthodes :
+  - **`black_scholes()`** : **formule fermée** pour option européenne ; rapide ; fournit **Greeks**.
+  - **`binomial(steps)`** : **arbre CRR** ; le prix **converge** vers BS quand *Steps ↑*.
+  - **`monte_carlo(paths)`** : **simulation** de scénarios ; renvoie **prix** + **IC95%** (marge d’erreur).
+
+#### Visualization utils
+- **`utils/plotting.py`** : helpers de graphiques
+  - **`price_history(df)`** : courbe d’historique (gauche).
+  - **`payoff(K, kind)`** : diagramme payoff call/put.
+  - **`mc_paths(array)`** : trajectoires simulées.
+  - **`convergence(x,y)`** : prix vs #paths/#steps.
+- **Colonne gauche** : **Price by time** (historique du sous-jacent).
+- **Colonne droite** : **Prix + IC/Greeks + Graphiques** (résultats de la page).
+
+#### Paramètres financiers (rappel)
+- **S0** : prix actuel du sous-jacent (dernier **Close**).
+- **K (Strike)** : prix d’exercice de l’option.
+- **r (Discount rate)** : taux sans risque (ex. 0.02 = 2 %).
+- **σ (Volatility)** : volatilité annuelle (ex. 0.20 = 20 %).
+- **T (Maturity)** : temps jusqu’à échéance, en années.
+- **Call/Put** : droit d’**acheter** / **vendre** au strike K.
+- **Steps** : nombre d’étapes du modèle binomial.
+- **#paths** : nombre de trajectoires simulées en Monte Carlo.
+
+#### Sorties & interprétation
+- **BS (référence)** : prix “théorique” rapide pour européenne, + **Greeks** :
+  - **Delta** (sensibilité au sous-jacent), **Vega** (à σ), **Theta** (au temps), **Gamma** (courbure), **Rho** (au taux).
+- **Binomial** : vérifie la **convergence** vers BS en augmentant *Steps*.
+- **Monte Carlo** : fournit un **prix** avec **IC95%** (estimateur ± marge) ;
+  - IC trop large → **augmenter `#paths`**.
+
+---
+
+## Conseils rapides (valeurs par défaut)
+- **σ** : 0.20 pour démarrer, puis ajuster.
+- **r** : 0.02 (USD) / 0.01 (EUR) par défaut (placeholder mid-term).
+- **T** : 0.25 / 0.5 / 1.0 (trimestre / semestre / 1 an).
+- **#paths (MC)** : 10 000 → 50 000.
+- **Steps (Binomial)** : 100 → 500 (voire 1000 si besoin).
+
+> Les méthodes peuvent rester **stubs** (squelettes) tant que l’architecture, le pipeline et l’affichage “Price by time” fonctionnent. Le **final** apportera implémentations complètes, tests/CI, et étude temps/mémoire.
+
 
 
 # 4) Tech stack et justifications
