@@ -94,7 +94,7 @@ L’application, structurée comme dans nos maquettes (sidebar **Monte Carlo Met
 - **Steps (Binomial)** : 100 → 500 (voire 1000 si besoin de stabilité).
 
 
-# 3) Architecture du projet
+# 3) Pipeline 
 
 ``` mermaid
 
@@ -151,17 +151,8 @@ flowchart TB
 
 ```
 
-UI → Core : les pages appellent les méthodes de pricing.
+## Explication/vue d'ensemble
 
-UI → Data : récupère les prix (avec cache).
-
-Core → Greeks/Plots : calcule greeks, renvoie des objets/figures.
-
-QA : tests locaux (pytest), exécutés automatiquement par GitHub Actions.
-
-## 3.2 Pipeline 
-
-### Vue d’ensemble (runtime)
 1. **Entrées utilisateur** (communes) : *Ticker*, *Start/End*, *Call/Put*, *Strike K*, *Discount Rate r*, *Volatility σ*.  
 2. **Fetch & préparation des données** : `fetch_prices()` → index UTC trié, `ret`/`logret`, cache `.parquet`.  
 3. **Price by time** *(bouton gauche)* : on trace l’historique (Close) du sous-jacent.  
