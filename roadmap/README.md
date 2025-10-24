@@ -312,10 +312,10 @@ flowchart TB
 
 # 6) Member taks
 
-| Membre            | Rôle principal         | Branches                     |
-| ----------------- | ---------------------- | ---------------------------- |
-| <Karam>           | Data IO & cache        | `feature/data-io`            |
-| <Ayoub>           | Black-Scholes + Greeks | `feature/black-scholes`      |
-| <Esperance>       | Binomial (convergence) | `feature/binomial`           |
-| <Karam>           | Monte Carlo (paths/IC) | `feature/monte-carlo`        |
-| <Esperance/Ayoub> | UI Streamlit & docs    | `feature/ui`                 |
+| Membre          | Rôle principal         | Branches                     |
+| --------------- | ---------------------- | ---------------------------- |
+| Karam           | Data IO & cache        | `feature/data-io`            |
+| Ayoub           | Black-Scholes + Greeks | `feature/black-scholes`      |
+| Esperance       | Binomial (convergence) | `feature/binomial`           |
+| Karam           | Monte Carlo (paths/IC) | `feature/monte-carlo`        |
+| Esperance/Ayoub | UI Streamlit & docs    | `feature/ui`                 |
