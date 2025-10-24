@@ -96,85 +96,60 @@ L’application, structurée comme dans nos maquettes (sidebar **Monte Carlo Met
 
 # 3) Architecture du projet
 
-```mermaid
-flowchart LR
-  subgraph UI ["UI - Streamlit (3 pages)"]
-    NAV["Sidebar (MC | BS | Binomial)"]
-    IN["Inputs communs + spécifiques"]
-    PLOTS["Zone de graphiques (time series / payoff / paths)"]
-  end
-  subgraph DATA ["Data IO"]
-    F["fetch_prices() (yfinance ou démo)"]
-    CACHE[("cache local / st.cache_data")]
-  end
-  subgraph CORE ["Core"]
-    PR["OptionPricer (stubs)"]
-  end
-  subgraph QA ["Qualité"]
-    TESTS["pytest (stubs)"]
-  end
-  NAV --> IN --> PR
-  IN --> F --> CACHE
-  PR --> PLOTS
-  TESTS --> PR
-```
-##OUI OUI
 ``` mermaid
+## Architecture (avec aller-retour Inputs ↔ Data IO & Cache)
+
+```mermaid
 flowchart TB
   %% --- Entrée utilisateur ---
-  U["Utilisateur\n(ticker, dates, call/put, K, r, σ,\nT / Steps / #paths)"]
+  U["Utilisateur"]
 
   %% --- UI ---
   subgraph UI ["UI - Streamlit"]
-    APP["src/stream_options/streamlit_app.py\n(entrée, mise en page 2 colonnes)"]
-    ROUTER["Sidebar router\n(MC | Black-Scholes | Binomial)"]
-    PAGES["src/stream_options/pages/\n1_MonteCarlo.py • 2_BlackScholes.py • 3_Binomial.py"]
+    IN["Inputs communs + spécifiques<br/>(ticker, dates, call/put, K, r, σ, T / Steps / #paths)"]
+    NAV["Sidebar (Monte Carlo | Black-Scholes | Binomial)"]
   end
 
-  %% --- Data IO ---
+  %% --- Data IO & Cache ---
   subgraph DATA ["Data IO & Cache"]
-    IO["src/stream_options/core/io.py\nfetch_prices(ticker,start,end)"]
-    CACHE[("cache local\nBases de données/*.parquet\n+ st.cache_data")]
-    YF[("Yahoo Finance API")]
+    IO["core/io.py<br/>fetch_prices() • risk_free_rate()"]
+    NORM["Normalisation<br/>(UTC, colonnes OHLCV, ret/logret)"]
+    CACHE[("Cache local .parquet<br/>+ st.cache_data")]
+    API[("Yahoo Finance")]
   end
 
-  %% --- Core ---
+  %% --- Core & Viz ---
   subgraph CORE ["Core - Pricing"]
-    PR["src/stream_options/core/pricing.py\nclass OptionPricer(s0,K,r,σ,T,kind)"]
+    PR["pricing.py<br/>class OptionPricer(...)"]
     BS["black_scholes()"]
     BIN["binomial(steps)"]
     MC["monte_carlo(paths)"]
-    GR["Greeks (BS)"]
   end
 
-  %% --- Viz ---
   subgraph VIZ ["Visualization utils"]
-    PLOT["src/stream_options/utils/plotting.py\nprice_history • payoff • mc_paths • convergence"]
+    PLOT["utils/plotting.py<br/>price_history • payoff • mc_paths • convergence"]
   end
 
-  %% --- Sorties à l'écran ---
-  LEFT["Colonne gauche\nPrice by time (Close)"]
-  RIGHT["Colonne droite\nRésultats + Graphiques\n(prix, IC95%/MC, Greeks/BS,\npayoff, paths, convergence)"]
+  OUTL["Colonne gauche<br/>Price by time"]
+  OUTR["Colonne droite<br/>Prix + IC/Greeks + Graphiques"]
 
   %% --- Flows ---
-  U --> APP --> ROUTER --> PAGES
-  PAGES --> IO --> CACHE
-  IO --> YF
-  PAGES --> PR
-  PR --> BS
-  PR --> BIN
-  PR --> MC
-  BS --> GR
-  BS --> PLOT
-  BIN --> PLOT
-  MC --> PLOT
-  IO --> PLOT
-  PLOT --> LEFT
-  PLOT --> RIGHT
+  U --> IN
+  NAV --> IN
+  IN <--> |"requête d'historique / DataFrame prêt à tracer"| IO
+  IO --> |"download"| API
+  IO --> NORM --> CACHE
+  IO --> NORM
 
-  %% notes
-  classDef faint fill:#f8f8f8,stroke:#bbb,color:#333
-  class U,LEFT,RIGHT faint;
+  IN --> PR
+  PR --> BS --> PLOT
+  PR --> BIN --> PLOT
+  PR --> MC  --> PLOT
+
+  NORM --> PLOT
+  PLOT --> OUTL
+  PLOT --> OUTR
+
 
 ```
 
