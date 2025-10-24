@@ -3,7 +3,7 @@
 # Projet Logiciel Gr.5:" StreamOptions — Tarification d’options européennes (BS / Binomial / Monte-Carlo)"
 Auteurs:
   - Ayoub MALOUM
-  - Esperance DJOSSOU
+  - Esperance DJOSSOU 22510550
   - Karam BENAMEUR 22201020
 
 
