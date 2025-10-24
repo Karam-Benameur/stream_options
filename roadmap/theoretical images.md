@@ -2,7 +2,7 @@
 
 ## Interface 1
 
-![Home](pictures/vagabond-manga-water-sword-training-nppmzivjjqcvpun2.jpg)
+![Home](pictures/1.png)
 
 ## Interface 2
 
