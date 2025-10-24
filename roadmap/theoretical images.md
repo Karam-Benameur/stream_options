@@ -18,4 +18,4 @@
 
 ## Logo
 
-![Stream options](pictures/logo
+![Stream Options](pictures/logo.png)
