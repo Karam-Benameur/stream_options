@@ -118,7 +118,65 @@ flowchart LR
   PR --> PLOTS
   TESTS --> PR
 ```
+##OUI OUI
+``` mermaid
+flowchart TB
+  %% --- Entrée utilisateur ---
+  U["Utilisateur\n(ticker, dates, call/put, K, r, σ,\nT / Steps / #paths)"]
 
+  %% --- UI ---
+  subgraph UI ["UI - Streamlit"]
+    APP["src/stream_options/streamlit_app.py\n(entrée, mise en page 2 colonnes)"]
+    ROUTER["Sidebar router\n(MC | Black-Scholes | Binomial)"]
+    PAGES["src/stream_options/pages/\n1_MonteCarlo.py • 2_BlackScholes.py • 3_Binomial.py"]
+  end
+
+  %% --- Data IO ---
+  subgraph DATA ["Data IO & Cache"]
+    IO["src/stream_options/core/io.py\nfetch_prices(ticker,start,end)"]
+    CACHE[("cache local\nBases de données/*.parquet\n+ st.cache_data")]
+    YF[("Yahoo Finance API")]
+  end
+
+  %% --- Core ---
+  subgraph CORE ["Core - Pricing"]
+    PR["src/stream_options/core/pricing.py\nclass OptionPricer(s0,K,r,σ,T,kind)"]
+    BS["black_scholes()"]
+    BIN["binomial(steps)"]
+    MC["monte_carlo(paths)"]
+    GR["Greeks (BS)"]
+  end
+
+  %% --- Viz ---
+  subgraph VIZ ["Visualization utils"]
+    PLOT["src/stream_options/utils/plotting.py\nprice_history • payoff • mc_paths • convergence"]
+  end
+
+  %% --- Sorties à l'écran ---
+  LEFT["Colonne gauche\nPrice by time (Close)"]
+  RIGHT["Colonne droite\nRésultats + Graphiques\n(prix, IC95%/MC, Greeks/BS,\npayoff, paths, convergence)"]
+
+  %% --- Flows ---
+  U --> APP --> ROUTER --> PAGES
+  PAGES --> IO --> CACHE
+  IO --> YF
+  PAGES --> PR
+  PR --> BS
+  PR --> BIN
+  PR --> MC
+  BS --> GR
+  BS --> PLOT
+  BIN --> PLOT
+  MC --> PLOT
+  IO --> PLOT
+  PLOT --> LEFT
+  PLOT --> RIGHT
+
+  %% notes
+  classDef faint fill:#f8f8f8,stroke:#bbb,color:#333
+  class U,LEFT,RIGHT faint;
+
+```
 
 UI → Core : les pages appellent les méthodes de pricing.
 
