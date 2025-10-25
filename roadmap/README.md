@@ -315,8 +315,10 @@ Pour les **versions**, on se basera sur les versions d'une personne du groupe ch
 ## b) Organisation du dossier
 
 Ici, dans le dossier **Bases de données**, on répertorie (plus tard il est possible qu'on ajoute les bases de données facultatives du tableau ci-dessus):
--Un dossier yfinance qui répertorie les fichiers de données exportés (snapshots), par ticker/période/intervalle.
--Un dossier Yahoo_finance.md qui concrètement consiste en une fiche “mode d’emploi + traçabilité” de nos snapshots Yahoo Finance.
+
+-Un dossier **yfinance** qui répertorie les fichiers de données exportés (snapshots), par ticker/période/intervalle.
+
+-Un markdown **Yahoo_finance.md** qui concrètement consiste en une fiche “mode d’emploi + traçabilité” de nos snapshots Yahoo Finance.
 
 On ajoutera plus tard, si nécessaire, les autres citées dans le tableau.
 
