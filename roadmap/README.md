@@ -6,6 +6,7 @@ Auteurs:
   - Esperance DJOSSOU 22510550
   - Karam BENAMEUR 22201020
 
+---
 
 # 1) Nom du projet et idée du concept
 
@@ -94,6 +95,7 @@ L’application, structurée comme dans nos maquettes (sidebar **Monte Carlo Met
 - **Number of Simulation (MC)** : 10 000 → 50 000.
 - **Steps (Binomial)** : 100 → 500 (voire 1000 si besoin de stabilité).
 
+---
 
 # 3) Pipeline 
 
@@ -203,7 +205,6 @@ flowchart TB
     - **Vérifie** la cohérence : BS (référence) ≈ Binomial (si Steps suffisant), MC dans un **IC** raisonnable.
     - **Ajuste σ** si besoin (jusqu’à cohérence), puis décide (ex. comparer au **prix de marché** au final).
 
----
 
 ### b) Glossaire des blocs & termes du schéma
 
@@ -257,7 +258,6 @@ flowchart TB
 - **Monte Carlo** : fournit un **prix** avec **IC95%** (estimateur ± marge) ;
   - IC trop large → **augmenter `#paths`**.
 
----
 
 ## Conseils rapides (valeurs par défaut)
 - **σ** : 0.20 pour démarrer, puis ajuster.
@@ -268,7 +268,7 @@ flowchart TB
 
 > Les méthodes peuvent rester **stubs** (squelettes) tant que l’architecture, le pipeline et l’affichage “Price by time” fonctionnent. Le **final** apportera implémentations complètes, tests/CI, et étude temps/mémoire.
 
-
+---
 
 # 4) Tech stack et justifications
 
@@ -292,6 +292,7 @@ flowchart TB
 
 - **numba** *(optionnel)* — accélération JIT : compile les boucles lourdes (MC / binomial) et peut apporter des gains ×5 à ×50 ; utile pour le critère “Time/Memory efficiency”.
 
+---
 
 # 5) Bases de données (choix & pourquoi)
 
