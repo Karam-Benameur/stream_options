@@ -292,6 +292,8 @@ flowchart TB
 
 - **numba** *(optionnel)* — accélération JIT : compile les boucles lourdes (MC / binomial) et peut apporter des gains ×5 à ×50 ; utile pour le critère “Time/Memory efficiency”.
 
+Pour les **versions**, on se basera sur les versions d'une personne du groupe choisie arbitrairement afin d'éviter les difficultés liées aux différences de versions
+
 ---
 
 # 5) Bases de données (choix & pourquoi)
