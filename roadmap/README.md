@@ -296,7 +296,9 @@ Pour les **versions**, on se basera sur les versions d'une personne du groupe ch
 
 ---
 
-# 5) Bases de données (choix & pourquoi)
+# 5) Bases de données
+
+## a) Choix & pourquoi
 
 | Source / Base             | À quoi ça sert dans l’app (référence aux écrans)                                                | Pourquoi ce choix (mid-term)                          | Implémentation prévue |
 |---|---|---|---|
@@ -310,6 +312,14 @@ Pour les **versions**, on se basera sur les versions d'une personne du groupe ch
 **Suffixes utiles** : Euronext Paris = `.PA` (`BNP.PA`), indices parfois `^GSPC`, `^FCHI`, etc.  
 **Reproductibilité** : pas de données brutes dans Git → **cache local** (`data/*.parquet`) + `st.cache_data` côté UI.
 
+## b) Organisation du dossier
+
+Ici, dans le dossier **Bases de données**, on répertorie (plus tard il est possible qu'on ajoute les bases de données facultatives du tableau ci-dessus):
+-Un dossier yfinance qui répertorie les fichiers de données exportés (snapshots), par ticker/période/intervalle.
+-Un dossier Yahoo_finance.md qui concrètement consiste en une fiche “mode d’emploi + traçabilité” de nos snapshots Yahoo Finance.
+
+On ajoutera plus tard, si nécessaire, les autres citées dans le tableau.
+
 ---
 
 # 6) Member taks
@@ -321,3 +331,5 @@ Pour les **versions**, on se basera sur les versions d'une personne du groupe ch
 | Ayoub           | Binomial (convergence) | `feature/binomial`           |
 | Karam           | Monte Carlo (paths/IC) | `feature/monte-carlo`        |
 | Esperance/Ayoub | UI Streamlit & docs    | `feature/UI`                 |
+
+
