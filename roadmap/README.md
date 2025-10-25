@@ -320,4 +320,4 @@ Pour les **versions**, on se basera sur les versions d'une personne du groupe ch
 | Esperance       | Black-Scholes + Greeks | `feature/black-scholes`      |
 | Ayoub           | Binomial (convergence) | `feature/binomial`           |
 | Karam           | Monte Carlo (paths/IC) | `feature/monte-carlo`        |
-| Esperance/Ayoub | UI Streamlit & docs    | `feature/ui`                 |
+| Esperance/Ayoub | UI Streamlit & docs    | `feature/UI`                 |
