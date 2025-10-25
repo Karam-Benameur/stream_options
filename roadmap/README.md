@@ -259,7 +259,7 @@ flowchart TB
   - IC trop large → **augmenter `#paths`**.
 
 
-## Conseils rapides (valeurs par défaut)
+## Conseils rapides à proposer peut-être à l'utilisateur (valeurs par défaut)
 - **σ** : 0.20 pour démarrer, puis ajuster.
 - **r** : 0.02 (USD) / 0.01 (EUR) par défaut (placeholder mid-term).
 - **T** : 0.25 / 0.5 / 1.0 (trimestre / semestre / 1 an).
