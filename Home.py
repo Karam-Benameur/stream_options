@@ -38,10 +38,14 @@ a.stPageLink.selected { background:#FF7A3A; color:white; border-color:#FF7A3A;}
 
 with st.sidebar:
     st.image("roadmap/pictures/logo.png", width=64)
-    st.page_link("Home", label="Home 🏠")  # <<< ICI: "Home", pas "Home.py"
-    st.page_link("pages/01_Monte_Carlo.py", label="Monte Carlo Method")
-    st.page_link("pages/02_Black_Scholes.py", label="Black and Scholes Method")
-    st.page_link("pages/03_Binomial.py", label="Binomial Method")
+
+    # Pas de page_link sur Home pour éviter l'erreur -> juste un libellé "actif"
+    st.markdown("**Home 🏠**")
+
+    # Liens vers les pages (fichiers dans /pages)
+    st.page_link("pages/01_Monte_Carlo.py", label="Monte Carlo")
+    st.page_link("pages/02_Black_Scholes.py", label="Black Scholes")
+    st.page_link("pages/03_Binomial.py", label="Binomial")
 
 st.title("Home")
 hero_home()
