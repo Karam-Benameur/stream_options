@@ -2,22 +2,22 @@
 
 # Projet Logiciel Gr.5:" StreamOptions — Tarification d’options européennes (BS / Binomial / Monte-Carlo)"
 Auteurs:
-  - Ayoub MALOUM
+  - Ayoub MALOUM 22515204
   - Esperance DJOSSOU 22510550
   - Karam BENAMEUR 22201020
 
+---
 
 # 1) Nom du projet et idée du concept
 
 **Nom du module** : `stream_options`  
-**Idée** : Ce projet consiste à user de Streamlit pour calibrer et comparer le prix d’options européennes (call/put) via 3 différentes méthodes qui sont: Black-Scholes, Binomial et Monte-Carlo.
-Suite à cela, sur le site on rendra possible l'analyse des écarts, Greeks, une étude des convergences et d'incertitude.
+**Idée** : Ce projet consiste à créer un site en utilisant Streamlit pour le pricing d'options européennes (call/put) comparant trois modèles : Black-Scholes, Binomial et Monte-Carlo. L'outil intégrera également l'analyse des écarts de prix, le calcul des Greeks, et l'étude de la convergence des méthodes numériques.
 
 ---
 
 # 2) Objectifs et utilité
 
-L’application, structurée comme dans nos maquettes (sidebar **Monte Carlo Method**, **Black and Scholes Method**, **Binomial Method**), a un double but **pédagogique** et **pratique**. Depuis les mêmes **inputs** (ticker, période, call/put, **Strike Price**, **Discount Rate**, **Volatility**) et des champs **spécifiques** à chaque page (**Number of Simulation** pour Monte Carlo, **Maturity** pour Black-Scholes, **Steps** pour Binomial), l’utilisateur lance deux parcours : **Price by time** (graphique d’historique à gauche) pour visualiser et contextualiser le sous-jacent, puis **Simulation** (panneau de droite) pour calculer et afficher **prix** et **graphiques clés** (payoff, trajectoires MC, convergence avec #paths/#steps, puis Greeks sur BS). Cette mise en parallèle rend visibles les **hypothèses** (GBM, volatilité), les **compromis précision/temps de calcul** et la **cohérence entre méthodes**. Elle sert à **comparer** rapidement les approches, **explorer des scénarios** (variations de \(K, T, \sigma, r\)) et **choisir la méthode** adaptée au contexte. Les données sont **téléchargées de façon programmatique** (reproductibilité) et mises en cache pour une UX fluide. *Mid-term : le flux « Price by time » et le squelette des pages sont démontrés ; les calculs complets (prix/Greeks) sont finalisés pour le livrable final.*
+L’application, structurée comme dans nos maquettes (sidebar **Monte Carlo Method**, **Black and Scholes Method**, **Binomial Method**), a un double but **pédagogique** et **pratique**. Depuis les mêmes **inputs** (ticker, période, call/put, **Strike Price**, **Discount Rate**, **Volatility**) et des champs **spécifiques** à chaque page, l’utilisateur lance deux parcours : **Price by time** (graphique d’historique à gauche) pour visualiser et contextualiser le sous-jacent, puis **Simulation** (panneau de droite) pour calculer et afficher **prix** et **graphiques clés** (payoff, trajectoires MC, convergence avec #paths/#steps, puis Greeks sur BS). Cette mise en parallèle rend visibles les **hypothèses** (GBM, volatilité), les **compromis précision/temps de calcul** et la **cohérence entre méthodes**. Elle sert à **comparer** rapidement les approches, **explorer des scénarios** (variations de \(K, T, \sigma, r\)) et **choisir la méthode** adaptée au contexte. Les données sont **téléchargées de façon programmatique** (reproductibilité) et mises en cache pour une UX fluide. *Mid-term : le flux « Price by time » et le squelette des pages sont démontrés ; les calculs complets (prix/Greeks) sont finalisés pour le livrable final.*
 
 ## 2.1) Comment ça se passe ?
 
@@ -95,6 +95,7 @@ L’application, structurée comme dans nos maquettes (sidebar **Monte Carlo Met
 - **Number of Simulation (MC)** : 10 000 → 50 000.
 - **Steps (Binomial)** : 100 → 500 (voire 1000 si besoin de stabilité).
 
+---
 
 # 3) Pipeline 
 
@@ -204,7 +205,6 @@ flowchart TB
     - **Vérifie** la cohérence : BS (référence) ≈ Binomial (si Steps suffisant), MC dans un **IC** raisonnable.
     - **Ajuste σ** si besoin (jusqu’à cohérence), puis décide (ex. comparer au **prix de marché** au final).
 
----
 
 ### b) Glossaire des blocs & termes du schéma
 
@@ -258,9 +258,8 @@ flowchart TB
 - **Monte Carlo** : fournit un **prix** avec **IC95%** (estimateur ± marge) ;
   - IC trop large → **augmenter `#paths`**.
 
----
 
-## Conseils rapides (valeurs par défaut)
+## Conseils rapides à proposer peut-être à l'utilisateur (valeurs par défaut)
 - **σ** : 0.20 pour démarrer, puis ajuster.
 - **r** : 0.02 (USD) / 0.01 (EUR) par défaut (placeholder mid-term).
 - **T** : 0.25 / 0.5 / 1.0 (trimestre / semestre / 1 an).
@@ -269,7 +268,7 @@ flowchart TB
 
 > Les méthodes peuvent rester **stubs** (squelettes) tant que l’architecture, le pipeline et l’affichage “Price by time” fonctionnent. Le **final** apportera implémentations complètes, tests/CI, et étude temps/mémoire.
 
-
+---
 
 # 4) Tech stack et justifications
 
@@ -293,8 +292,13 @@ flowchart TB
 
 - **numba** *(optionnel)* — accélération JIT : compile les boucles lourdes (MC / binomial) et peut apporter des gains ×5 à ×50 ; utile pour le critère “Time/Memory efficiency”.
 
+Pour les **versions**, on se basera sur les versions d'une personne du groupe choisie arbitrairement afin d'éviter les difficultés liées aux différences de versions
 
-# 5) Bases de données (choix & pourquoi)
+---
+
+# 5) Bases de données
+
+## a) Choix & pourquoi
 
 | Source / Base             | À quoi ça sert dans l’app (référence aux écrans)                                                | Pourquoi ce choix (mid-term)                          | Implémentation prévue |
 |---|---|---|---|
@@ -308,14 +312,26 @@ flowchart TB
 **Suffixes utiles** : Euronext Paris = `.PA` (`BNP.PA`), indices parfois `^GSPC`, `^FCHI`, etc.  
 **Reproductibilité** : pas de données brutes dans Git → **cache local** (`data/*.parquet`) + `st.cache_data` côté UI.
 
+## b) Organisation du dossier
+
+Ici, dans le dossier **Bases de données**, on répertorie (plus tard il est possible qu'on ajoute les bases de données facultatives du tableau ci-dessus):
+
+-Un dossier **yfinance** qui répertorie les fichiers de données exportés (snapshots), par ticker/période/intervalle.
+
+-Un markdown **Yahoo_finance.md** qui concrètement consiste en une fiche “mode d’emploi + traçabilité” de nos snapshots Yahoo Finance.
+
+On ajoutera plus tard, si nécessaire, les autres citées dans le tableau.
+
 ---
 
 # 6) Member taks
 
-| Membre  | Rôle principal         | Branches                     |
-| ------- | ---------------------- | ---------------------------- |
-| <Nom 1> | Data IO & cache        | `feature/data-io`            |
-| <Nom 2> | Black-Scholes + Greeks | `feature/black-scholes`      |
-| <Nom 3> | Binomial (convergence) | `feature/binomial`           |
-| <Nom 4> | Monte Carlo (paths/IC) | `feature/monte-carlo`        |
-| <Nom 5> | UI Streamlit & docs    | `feature/ui`, `docs/roadmap` |
+| Membre          | Rôle principal         | Branches                     |
+| --------------- | ---------------------- | ---------------------------- |
+| Karam           | Data IO & cache        | `feature/data-io`            |
+| Esperance       | Black-Scholes + Greeks | `feature/black-scholes`      |
+| Ayoub           | Binomial (convergence) | `feature/binomial`           |
+| Karam           | Monte Carlo (paths/IC) | `feature/monte-carlo`        |
+| Esperance/Ayoub | UI Streamlit & docs    | `feature/UI`                 |
+
+
