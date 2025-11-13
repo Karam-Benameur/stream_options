@@ -1,5 +1,3 @@
-# core/pricing.py
-
 import numpy as np
 
 
@@ -12,25 +10,15 @@ def simulate_gbm_paths(
     n_sims: int,
     seed: int | None = None,
 ):
-    """
-    Simule des trajectoires de prix sous-jacent via un
-    Mouvement Brownien Géométrique (modèle de Black-Scholes).
-
-    Retourne un array de taille (n_steps + 1, n_sims)
-    contenant les trajectoires (ligne 0 = temps 0).
-    """
     dt = T / n_steps
     rng = np.random.default_rng(seed)
 
-    # Incréments gaussiens
     Z = rng.standard_normal((n_steps, n_sims))
     increments = (r - 0.5 * sigma**2) * dt + sigma * np.sqrt(dt) * Z
 
-    # On travaille en log pour la stabilité numérique
     log_paths = np.log(S0) + np.cumsum(increments, axis=0)
     paths = np.exp(log_paths)
 
-    # On ajoute la valeur initiale S0 en première ligne
     paths = np.vstack([np.full((1, n_sims), S0), paths])
 
     return paths
@@ -51,10 +39,11 @@ def price_european_option_mc(
     Prix d'une option européenne (Call ou Put) par Monte Carlo
     sous le modèle de Black-Scholes.
 
-    Retourne : (prix, erreur_std, paths)
+    Retourne : (prix, erreur_std, paths, discounted)
     - prix : estimation Monte Carlo
     - erreur_std : écart-type de l'estimateur
-    - paths : trajectoires simulées (pour les graphiques)
+    - paths : trajectoires simulées
+    - discounted : payoffs actualisés (pour histogramme / convergence)
     """
     paths = simulate_gbm_paths(S0, r, sigma, T, n_steps, n_sims, seed)
     S_T = paths[-1, :]  # prix à l'échéance
@@ -71,4 +60,4 @@ def price_european_option_mc(
     price = discounted.mean()
     stderr = discounted.std(ddof=1) / np.sqrt(n_sims)
 
-    return price, stderr, paths
+    return price, stderr, paths, discounted
