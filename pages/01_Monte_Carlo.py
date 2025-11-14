@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 from datetime import date
 
@@ -141,11 +142,15 @@ if show_price_by_time or run_simulation:
 
     # 2) Distribution du sous-jacent à l'échéance
     with tab_dist:
+        counts, bin_edges = np.histogram(S_T, bins=60, density=True)
+        centers = 0.5 * (bin_edges[1:] + bin_edges[:-1])
+
         fig, ax = plt.subplots()
-        ax.hist(S_T, bins=40)
+        ax.hist(S_T, bins=60, density=True, alpha=0.3)  # barres translucides
+        ax.plot(centers, counts)                         # courbe par-dessus
         ax.set_title("Distribution du prix du sous-jacent à l'échéance")
         ax.set_xlabel("S_T")
-        ax.set_ylabel("Fréquence")
+        ax.set_ylabel("Densité empirique")
         st.pyplot(fig)
 
     # 3) Convergence du prix en fonction du nombre de simulations
