@@ -83,12 +83,16 @@ with col2:
         format="%.2f",
     )
 
-run_simulation = st.button("Run Monte Carlo pricing")
+btn_col1, btn_col2 = st.columns(2)
+with btn_col1:
+    show_price_by_time = st.button("Price by time")
+with btn_col2:
+    run_simulation = st.button("Simulation")
 
 # provisoire : plus tard on utilisera le prix réel du ticker
 S0 = 100.0
 
-if run_simulation:
+if show_price_by_time or run_simulation:
     option_type = "call" if call_or_put.lower() == "call" else "put"
 
     price, stderr, paths, discounted = price_european_option_mc(
