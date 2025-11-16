@@ -104,15 +104,13 @@ with col2:
         format="%.2f",
     )
 
-btn_col1, btn_col2 = st.columns(2)
-with btn_col1:
-    show_price_by_time = st.button("Price by time")
-with btn_col2:
-    run_simulation = st.button("Simulation")
+btn_left, btn_mid, btn_right = st.columns([1, 1, 1])
+with btn_mid:
+    run_simulation = st.button("Run Monte Carlo simulation")
 
-# --- Monte Carlo pricing : déclenché par au moins un des deux boutons ---
+# --- Monte Carlo pricing : déclenché par le bouton ---
 
-if show_price_by_time or run_simulation:
+if run_simulation:
     option_type = "call" if call_or_put.lower() == "call" else "put"
 
     # 1) Télécharger l'historique de prix depuis Yahoo Finance
