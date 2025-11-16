@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from datetime import date
+from pathlib import Path
 
 from core.pricing import price_european_option_mc
 from core.data_io import download_history_yahoo, compute_spot_and_vol_from_history
@@ -20,14 +21,32 @@ st.write(
     "et de pricer une option européenne (Call ou Put) par Monte Carlo."
 )
 
+# --- Chargement de la liste de tickers depuis le CSV ---
+
+TICKER_CSV = (
+    Path(__file__)
+    .resolve()
+    .parents[1]              # remonte à la racine du projet stream_options
+    / "Bases de données"
+    / "yf_data"
+    / "name_tickers.csv"
+)
+
+df_tickers = pd.read_csv(TICKER_CSV)
+
+# Adapte le nom de la colonne si besoin : "ticker", "Ticker", "Symbol", etc.
+ticker_list = df_tickers["ticker"].dropna().unique().tolist()
+
+
 col1, col2 = st.columns(2)
 
 with col1:
     ticker = st.selectbox(
         "Select Ticker",
-        ["AAPL", "MSFT", "TSLA", "BNP.PA", "AIR.PA"],
+        ticker_list,
         index=0,
     )
+
 
     start_date = st.date_input(
         "Start date",
