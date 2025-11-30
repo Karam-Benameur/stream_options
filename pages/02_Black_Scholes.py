@@ -1,8 +1,3 @@
-import streamlit as st
-st.title("Pricing Options using Black and Scholes Method")
-st.write("Placeholder page — UI arriving next.")
-
-import sys
 import os
 import streamlit as st
 import pandas as pd
