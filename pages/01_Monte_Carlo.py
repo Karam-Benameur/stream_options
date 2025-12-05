@@ -140,17 +140,20 @@ if run_simulation:
     sigma_used = sigma_est
 
     # 3) Lancer la simulation Monte Carlo
-    price, stderr, paths, discounted = price_european_option_mc(
-        S0=S0,
-        K=strike,
-        T=maturity,
-        r=discount_rate,
-        sigma=sigma_used,
-        n_steps=252,
-        n_sims=int(n_sims),
-        option_type=option_type,
-    )
-
+    try:
+        price, stderr, paths, discounted = price_european_option_mc(
+            S0=S0,
+            K=strike,
+            T=maturity,
+            r=discount_rate,
+            sigma=sigma_used,
+            n_steps=252,
+            n_sims=int(n_sims),
+            option_type=option_type,
+        )
+    except ValueError as e:
+        st.error(f"Paramètres invalides pour la simulation Monte Carlo : {e}")
+        st.stop()
     # ---- Résumé du prix ----
     st.subheader("Estimated option price")
 
