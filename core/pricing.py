@@ -61,3 +61,112 @@ def price_european_option_mc(
     stderr = discounted.std(ddof=1) / np.sqrt(n_sims)
 
     return price, stderr, paths, discounted
+
+from dataclasses import dataclass
+from math import log, sqrt, exp, erf, pi
+from typing import Literal, Dict, Tuple
+
+
+def _norm_pdf(x: float) -> float:
+    """Densité de la loi normale standard φ(x)."""
+    return (1.0 / sqrt(2.0 * pi)) * exp(-0.5 * x * x)
+
+
+def _norm_cdf(x: float) -> float:
+    """Fonction de répartition de la loi normale standard Φ(x)."""
+    return 0.5 * (1.0 + erf(x / sqrt(2.0)))
+
+
+@dataclass
+class OptionPricer:
+    """
+    Petit pricer Black-Scholes pour une option européenne.
+
+    Attributes
+    ----------
+    S0 : float
+        Prix spot du sous-jacent.
+    K : float
+        Strike.
+    r : float
+        Taux sans risque (annuel).
+    sigma : float
+        Volatilité (annuelle).
+    T : float
+        Maturité en années.
+    kind : {"call", "put"}
+        Type d'option.
+    """
+    S0: float
+    K: float
+    r: float
+    sigma: float
+    T: float
+    kind: Literal["call", "put"] = "call"
+
+    def __post_init__(self) -> None:
+        """Validation basique des paramètres (avec ValueError)."""
+        self.kind = self.kind.lower()
+        if self.kind not in {"call", "put"}:
+            raise ValueError("kind must be 'call' or 'put'")
+        if self.S0 <= 0:
+            raise ValueError("S0 must be > 0")
+        if self.K <= 0:
+            raise ValueError("K must be > 0")
+        if self.T <= 0:
+            raise ValueError("T (maturity) must be > 0")
+        if self.sigma < 0:
+            raise ValueError("sigma must be >= 0")
+
+    def _d1_d2(self) -> Tuple[float, float]:
+        """Calcule d1 et d2 de Black-Scholes."""
+        vol_sqrt_T = self.sigma * sqrt(self.T)
+        if vol_sqrt_T == 0:
+            raise ValueError("sigma * sqrt(T) must be > 0 for Black-Scholes.")
+
+        d1 = (log(self.S0 / self.K) + (self.r + 0.5 * self.sigma**2) * self.T) / vol_sqrt_T
+        d2 = d1 - vol_sqrt_T
+        return d1, d2
+
+    def black_scholes(self) -> Dict[str, float]:
+        """
+        Calcule le prix Black-Scholes et les Greeks.
+
+        Returns
+        -------
+        dict avec les clés : "price", "delta", "gamma", "vega", "theta", "rho".
+        """
+        d1, d2 = self._d1_d2()
+        Nd1 = _norm_cdf(d1)
+        Nd2 = _norm_cdf(d2)
+        pdf_d1 = _norm_pdf(d1)
+        df = exp(-self.r * self.T)
+
+        if self.kind == "call":
+            price = self.S0 * Nd1 - self.K * df * Nd2
+            delta = Nd1
+            theta = (
+                - (self.S0 * pdf_d1 * self.sigma) / (2.0 * sqrt(self.T))
+                - self.r * self.K * df * Nd2
+            )
+            rho = self.K * self.T * df * Nd2
+        else:
+            price = self.K * df * (1.0 - Nd2) - self.S0 * (1.0 - Nd1)
+            delta = Nd1 - 1.0
+            theta = (
+                - (self.S0 * pdf_d1 * self.sigma) / (2.0 * sqrt(self.T))
+                + self.r * self.K * df * (1.0 - Nd2)
+            )
+            rho = -self.K * self.T * df * (1.0 - Nd2)
+
+        gamma = pdf_d1 / (self.S0 * self.sigma * sqrt(self.T))
+        vega = self.S0 * pdf_d1 * sqrt(self.T)
+
+        return {
+            "price": price,
+            "delta": delta,
+            "gamma": gamma,
+            "vega": vega,
+            "theta": theta,
+            "rho": rho,
+        }
