@@ -1,0 +1,301 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usetheme{Madrid} % Thème simple et propre
+\usecolortheme{default}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+% Titre / auteurs / etc.
+\title{StreamOptions : pricing d'options europ\'eennes}
+\subtitle{Monte Carlo, Black--Scholes, Binomial}
+\author{Prénom Nom 1 \and Prénom Nom 2 \and Prénom Nom 3}
+\institute{M1 Statistique et Science des Donn\'ees -- Universit\'e de Montpellier}
+\date{\today}
+
+\begin{document}
+
+%------------------------------------------------
+\begin{frame}
+  \titlepage
+\end{frame}
+%------------------------------------------------
+
+\begin{frame}{Plan}
+  \tableofcontents
+\end{frame}
+
+%================================================
+\section{Contexte et objectifs}
+%================================================
+
+\begin{frame}{Contexte du projet}
+  \begin{itemize}
+    \item Projet de l'UE de d\'eveloppement Python : cr\'eer un module/applicatif complet.
+    \item Notre choix : une application \textbf{Streamlit} pour pricer des options europ\'eennes.
+    \item Mise en \oe uvre de plusieurs m\'ethodes :
+    \begin{itemize}
+      \item Monte Carlo sous Black--Scholes,
+      \item Formule ferm\'ee de Black--Scholes,
+      \item Mod\`ele binomial.
+    \end{itemize}
+    \item Objectif : proposer une interface interactive pour explorer ces diff\'erents mod\`eles.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Rappel : qu'est-ce qu'une option europ\'eenne ?}
+  \begin{itemize}
+    \item Contrat financier donnant le droit (mais pas l'obligation) d'acheter ou de vendre un actif \`a une date future $T$ au prix $K$.
+    \item \textbf{Call europ\'een} : droit d'\textbf{acheter} au strike $K$ \`a la date $T$.
+    \item \textbf{Put europ\'een} : droit de \textbf{vendre} au strike $K$ \`a la date $T$.
+    \item Payoffs typiques :
+    \[
+      \text{Call : } (S_T - K)_+ \qquad
+      \text{Put : } (K - S_T)_+.
+    \]
+    \item Hypoth\`ese centrale du projet : dynamique du sous-jacent sous le mod\`ele de Black--Scholes.
+  \end{itemize}
+\end{frame}
+
+%================================================
+\section{Donn\'ees, tickers et m\'ethodes}
+%================================================
+
+\begin{frame}{Donn\'ees et tickers}
+  \begin{itemize}
+    \item Donn\'ees de march\'e r\'ecup\'er\'ees via le package \texttt{yfinance} (Yahoo Finance).
+    \item Un \textbf{ticker} identifie un actif : \texttt{AAPL}, \texttt{MSFT}, \texttt{BNP.PA}, etc.
+    \item Nous utilisons un fichier
+      \texttt{Bases de donn\'ees/yf\_data/name\_tickers.csv} :
+      \begin{itemize}
+        \item liste des tickers disponibles dans l'application,
+        \item permet de contr\^oler la qualit\'e des donn\'ees pour la d\'emo.
+      \end{itemize}
+    \item \textbf{Pipeline} :
+      \[
+      \text{Yahoo Finance} \rightarrow \texttt{core.data\_io}
+      \rightarrow \text{app Streamlit}.
+      \]
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Vue d'ensemble des 3 m\'ethodes}
+  \begin{itemize}
+    \item \textbf{Monte Carlo} :
+      \begin{itemize}
+        \item simulation de trajectoires du sous-jacent via un mouvement brownien g\'eom\'etrique,
+        \item estimation du prix comme moyenne des payoffs actualis\'es.
+      \end{itemize}
+    \item \textbf{Black--Scholes (formule ferm\'ee)} :
+      \begin{itemize}
+        \item prix obtenu analytiquement en supposant volatilité constante,
+        \item r\'ef\'erence th\'eorique pour les options europ\'eennes.
+      \end{itemize}
+    \item \textbf{Mod\`ele binomial} :
+      \begin{itemize}
+        \item arbre recombinants sur la p\'eriode $[0,T]$,
+        \item valorisation par r\'ecurrence en remontant l'arbre.
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Monte Carlo sous Black--Scholes}
+  \begin{itemize}
+    \item Le sous-jacent suit un \textbf{mouvement brownien g\'eom\'etrique} :
+    \[
+      dS_t = r S_t\,dt + \sigma S_t\,dW_t.
+    \]
+    \item On simule des trajectoires discr\'etis\'ees sur $n\_steps$ :
+    \[
+      S_{t+\Delta t} = S_t
+        \exp\left(
+          \left(r - \frac{\sigma^2}{2}\right)\Delta t + \sigma \sqrt{\Delta t} Z
+        \right).
+    \]
+    \item Pour chaque trajectoire, on calcule le payoff \`a l'\'ech\'eance et on actualise :
+    \[
+      C \approx e^{-rT} \frac{1}{N}\sum\_{i=1}^N (S_T^{(i)} - K)\_+.
+    \]
+    \item Possibilit\'e d'obtenir des intervalles de confiance via l'erreur standard.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Formule de Black--Scholes}
+  \begin{itemize}
+    \item Sous les hypoth\`eses du mod\`ele, le prix d'un call europ\'een vaut :
+    \[
+      C = S_0 \Phi(d_1) - K e^{-rT} \Phi(d_2),
+    \]
+    o\`u
+    \[
+      d_1 = \frac{\ln(S_0/K) + (r + \frac{\sigma^2}{2})T}{\sigma \sqrt{T}},
+      \qquad d_2 = d_1 - \sigma \sqrt{T}.
+    \]
+    \item Pour un put europ\'een : formule analogue ou via parit\'e call--put.
+    \item Dans le code : fonction \texttt{black\_scholes\_price} + m\'ethode de la classe \texttt{OptionPricer}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Mod\`ele binomial}
+  \begin{itemize}
+    \item On d\'ecoupe $[0,T]$ en $N$ pas et on construit un arbre :
+      \begin{itemize}
+        \item \`a chaque pas, le sous-jacent monte (facteur $u$) ou descend (facteur $d$),
+        \item choix de $u$, $d$ et de la probabilit\'e risque-neutre $p$.
+      \end{itemize}
+    \item Calcul du payoff aux feuilles, puis actualisation en remontant l'arbre :
+    \[
+      C\_{t} = e^{-r\Delta t}(p C\_{t+\Delta t}^{\text{up}} + (1-p) C\_{t+\Delta t}^{\text{down}}).
+    \]
+    \item Convergence vers le prix de Black--Scholes quand $N$ augmente.
+  \end{itemize}
+\end{frame}
+
+%================================================
+\section{Architecture du projet et GitHub}
+%================================================
+
+\begin{frame}{Architecture du code}
+  \begin{itemize}
+    \item Projet organis\'e en plusieurs sous-modules :
+    \begin{itemize}
+      \item \texttt{core.pricing} : fonctions de pricing et classe \texttt{OptionPricer},
+      \item \texttt{core.data\_io} : t\'el\'echargement des donn\'ees Yahoo, calcul de $S\_0$ et de $\sigma$,
+      \item \texttt{pages/*.py} : pages Streamlit (Monte Carlo, Black--Scholes, Binomial),
+      \item \texttt{tests/} : tests unitaires (\texttt{pytest}),
+      \item \texttt{docs/} : documentation (Sphinx),
+      \item \texttt{slides/} : pr\'esentation Beamer.
+    \end{itemize}
+    \item Gestion de versions avec Git :
+    \begin{itemize}
+      \item branche \texttt{master} et branches de fonctionnalit\'es (\texttt{feature/monte-carlo}, \texttt{feature/black-scholes}, \dots),
+      \item merges progressifs vers \texttt{master} une fois les pages stabilis\'ees.
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Module de pricing : \texttt{core.pricing}}
+  \begin{itemize}
+    \item Fonctions principales :
+    \begin{itemize}
+      \item \texttt{simulate\_gbm\_paths} : simulation de trajectoires,
+      \item \texttt{price\_european\_option\_mc} : estimation Monte Carlo,
+      \item \texttt{black\_scholes\_price} : formule ferm\'ee.
+    \end{itemize}
+    \item Classe \texttt{OptionPricer} :
+    \begin{itemize}
+      \item regroupe les param\`etres $(S\_0, K, T, r, \sigma)$,
+      \item fournit des m\'ethodes \texttt{black\_scholes\_price()} et \texttt{monte\_carlo\_price()}.
+    \end{itemize}
+    \item Gestion des entr\'ees invalides :
+    \begin{itemize}
+      \item lev\'e de \texttt{ValueError} si $T \le 0$, $\sigma < 0$, etc.
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+%================================================
+\section{Pr\'esentation de l'application}
+%================================================
+
+\begin{frame}{Interface Streamlit : page Monte Carlo}
+  \begin{itemize}
+    \item Widgets principaux :
+    \begin{itemize}
+      \item choix du ticker, dates de d\'ebut/fin, strike, $T$, $r$, nombre de simulations,
+      \item bouton \texttt{Run Monte Carlo simulation}.
+    \end{itemize}
+    \item Graphiques :
+    \begin{itemize}
+      \item trajectoires simul\'ees du sous-jacent,
+      \item distribution de $S\_T$,
+      \item convergence de l'estimation en fonction de $N$,
+      \item historique du prix (donn\'ees Yahoo).
+    \end{itemize}
+  \end{itemize}
+  % \vspace{0.3cm}
+  % \centering
+  % \includegraphics[width=0.7\textwidth]{figures/monte_carlo_page.png}
+\end{frame}
+
+\begin{frame}{Interface Streamlit : pages Black--Scholes et Binomial}
+  \begin{itemize}
+    \item Page \textbf{Black--Scholes} :
+    \begin{itemize}
+      \item param\`etres $(S\_0, K, T, r, \sigma)$,
+      \item calcul du prix par la formule ferm\'ee,
+      \item comparaison possible avec Monte Carlo.
+    \end{itemize}
+    \item Page \textbf{Binomial} :
+    \begin{itemize}
+      \item profondeur de l'arbre,
+      \item visualisation de la convergence vers Black--Scholes,
+      \item analyse de l'impact de $N$ sur le temps de calcul.
+    \end{itemize}
+  \end{itemize}
+  % \vspace{0.3cm}
+  % \centering
+  % \includegraphics[width=0.7\textwidth]{figures/black_scholes_page.png}
+\end{frame}
+
+%================================================
+\section{Tests, difficult\'es et conclusion}
+%================================================
+
+\begin{frame}{Tests, documentation et performances}
+  \begin{itemize}
+    \item \textbf{Tests unitaires} (\texttt{pytest}) :
+    \begin{itemize}
+      \item v\'erification de cas simples pour Black--Scholes,
+      \item tests sur la coh\'erence de Monte Carlo (absence de NaN, signes attendus, etc.).
+    \end{itemize}
+    \item \textbf{Documentation} :
+    \begin{itemize}
+      \item docstrings pour chaque fonction et classe,
+      \item documentation g\'en\'er\'ee avec \texttt{Sphinx} dans \texttt{docs/}.
+    \end{itemize}
+    \item \textbf{Temps/m\'emoire} :
+    \begin{itemize}
+      \item comparaison des temps de calcul entre Monte Carlo et Black--Scholes,
+      \item impact du nombre de trajectoires sur le temps de simulation.
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Difficult\'es rencontr\'ees}
+  \begin{itemize}
+    \item Gestion des branches Git et r\'esolution de conflits lors du merge des diff\'erentes m\'ethodes.
+    \item Organisation modulaire du code :
+    \begin{itemize}
+      \item factorisation de la logique de pricing dans \texttt{core.pricing},
+      \item r\'eutilisation dans plusieurs pages Streamlit.
+    \end{itemize}
+    \item Probl\`emes li\'es aux donn\'ees :
+    \begin{itemize}
+      \item tickers avec peu d'historique,
+      \item qualit\'e des s\'eries (jours f\'eri\'es, trous).
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Conclusion et perspectives}
+  \begin{itemize}
+    \item Application fonctionnelle pour pricer des options europ\'eennes via trois m\'ethodes.
+    \item Architecture modulaire qui facilite l'ajout :
+    \begin{itemize}
+      \item d'autres produits (barri\`eres, am\'ericaines),
+      \item d'autres mod\`eles (volatilit\'e locale, stochastique).
+    \end{itemize}
+    \item Pistes de prolongement :
+    \begin{itemize}
+      \item d\'eploiement en ligne (Streamlit Cloud),
+      \item enrichissement de la documentation et des tests.
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\end{document}
