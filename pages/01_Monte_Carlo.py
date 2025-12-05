@@ -17,8 +17,8 @@ st.set_page_config(
 
 st.title("Pricing Options using Monte Carlo Method")
 st.write(
-    "Cette page permet de simuler des trajectoires du sous-jacent "
-    "et de pricer une option européenne (Call ou Put) par Monte Carlo."
+    "This page allows simulating the trajectories of the underlying "
+    "and pricing a European option (Call or Put) by Monte Carlo."
 )
 
 # --- Chargement de la liste de tickers depuis le CSV ---
