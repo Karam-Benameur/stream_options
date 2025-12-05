@@ -46,7 +46,7 @@ class OptionModel:
         q = (math.exp(r*dt) - d) / (u - d)
         q = min(max(q, 0.0), 1.0)
 
-        # 2. Forward Pass: Stock Price Tree
+        # 2. Stock Price Tree
         stock = []
         for t in range(N+1):
             row = [S0 * (u**i) * (d**(t-i)) for i in range(t+1)]
