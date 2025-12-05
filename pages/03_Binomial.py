@@ -102,7 +102,7 @@ class MarketData:
             return None, None
 
 # -----------------------------------------------------------------------------
-# 3. VISUALIZATION ENGINE: Charts and Graphs
+# 3. VISUALIZATION: Charts and Graphs
 # -----------------------------------------------------------------------------
 class Visualizer:
     """Generates all Plotly and Graphviz visualizations."""
