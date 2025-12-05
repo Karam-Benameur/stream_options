@@ -1,5 +1,12 @@
 import numpy as np
+from dataclasses import dataclass
+from math import log, sqrt, exp, erf, pi
+from typing import Literal, Dict, Tuple
 
+
+# =====================================================================
+# 1) Monte Carlo : simulation de trajectoires + pricing
+# =====================================================================
 
 def simulate_gbm_paths(
     S0: float,
@@ -10,6 +17,46 @@ def simulate_gbm_paths(
     n_sims: int,
     seed: int | None = None,
 ):
+    """
+    Simule des trajectoires de prix sous-jacent via un Mouvement Brownien
+    Géométrique (modèle de Black-Scholes).
+
+    Parameters
+    ----------
+    S0 : float
+        Prix initial du sous-jacent (doit être > 0).
+    r : float
+        Taux sans risque (annuel).
+    sigma : float
+        Volatilité (annuelle, doit être >= 0).
+    T : float
+        Maturité en années (doit être > 0).
+    n_steps : int
+        Nombre de pas de temps (doit être > 0).
+    n_sims : int
+        Nombre de trajectoires simulées (doit être > 0).
+    seed : int, optional
+        Graine du générateur aléatoire (pour la reproductibilité).
+
+    Returns
+    -------
+    np.ndarray
+        Tableau de taille (n_steps + 1, n_sims) contenant les trajectoires.
+
+    Raises
+    ------
+    ValueError
+        Si S0 <= 0, sigma < 0, T <= 0 ou si n_steps / n_sims ne sont pas positifs.
+    """
+    if S0 <= 0:
+        raise ValueError("S0 must be strictly positive.")
+    if sigma < 0:
+        raise ValueError("sigma must be non-negative.")
+    if T <= 0:
+        raise ValueError("T must be strictly positive.")
+    if n_steps <= 0 or n_sims <= 0:
+        raise ValueError("n_steps and n_sims must be positive integers.")
+
     dt = T / n_steps
     rng = np.random.default_rng(seed)
 
@@ -20,7 +67,6 @@ def simulate_gbm_paths(
     paths = np.exp(log_paths)
 
     paths = np.vstack([np.full((1, n_sims), S0), paths])
-
     return paths
 
 
@@ -44,6 +90,12 @@ def price_european_option_mc(
     - erreur_std : écart-type de l'estimateur
     - paths : trajectoires simulées
     - discounted : payoffs actualisés (pour histogramme / convergence)
+
+    Raises
+    ------
+    ValueError
+        Si ``option_type`` n'est pas 'call' ou 'put', ou si les paramètres
+        passés à ``simulate_gbm_paths`` sont invalides.
     """
     paths = simulate_gbm_paths(S0, r, sigma, T, n_steps, n_sims, seed)
     S_T = paths[-1, :]  # prix à l'échéance
@@ -62,10 +114,10 @@ def price_european_option_mc(
 
     return price, stderr, paths, discounted
 
-from dataclasses import dataclass
-from math import log, sqrt, exp, erf, pi
-from typing import Literal, Dict, Tuple
 
+# =====================================================================
+# 2) Black-Scholes fermé + classe OptionPricer
+# =====================================================================
 
 def _norm_pdf(x: float) -> float:
     """Densité de la loi normale standard φ(x)."""
@@ -134,7 +186,9 @@ class OptionPricer:
 
         Returns
         -------
-        dict avec les clés : "price", "delta", "gamma", "vega", "theta", "rho".
+        dict
+            Dictionnaire avec les clés :
+            "price", "delta", "gamma", "vega", "theta", "rho".
         """
         d1, d2 = self._d1_d2()
         Nd1 = _norm_cdf(d1)
