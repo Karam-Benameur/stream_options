@@ -67,7 +67,7 @@ with col1:
     )
 
     discount_rate = st.number_input(
-        "Discount Rate (r, en annuel)",
+        "Discount Rate (r, in annual)",
         min_value=0.0,
         value=0.02,
         step=0.005,
@@ -89,7 +89,7 @@ with col2:
     )
 
     volatility = st.number_input(
-        "Volatility (σ, en annuel)",
+        "Volatility (σ, in annual)",
         min_value=0.01,
         value=0.2,
         step=0.01,
@@ -97,7 +97,7 @@ with col2:
     )
 
     maturity = st.number_input(
-        "Maturity (T, en années)",
+        "Maturity (T, in years)",
         min_value=0.01,
         value=1.0,
         step=0.25,
@@ -132,8 +132,8 @@ if run_simulation:
         st.stop()
 
     st.info(
-        f"Prix spot S₀ (dernier Adj Close) : {S0:.2f}  •  "
-        f"Volatilité historique annuelle estimée : {sigma_est:.2%}"
+        f"Spot price S₀ (last Adj Close) : {S0:.2f}  •  "
+        f"Estimated annual historical volatility : {sigma_est:.2%}"
     )
 
     # Pour l'instant, on utilise la volatilité historique dans la simulation
