@@ -322,6 +322,8 @@ Ici, dans le dossier **Bases de données**, on répertorie (plus tard il est pos
 
 On ajoutera plus tard, si nécessaire, les autres citées dans le tableau.
 
+(Finalement le dossier de base de données comporte une liste de tickers utilisés sur la première page du site Monte Carlo.
+
 ---
 
 # 6) Member taks
