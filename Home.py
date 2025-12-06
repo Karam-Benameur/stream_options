@@ -57,7 +57,8 @@ col_left, col_center, col_right = st.columns([1, 2, 1])
 
 with col_center:
     st.image(
-        str(LOGO_PATH),
-        use_column_width=True,     # le logo prend la largeur de la colonne
-        caption="StreamOptions"    # optionnel : petit texte sous le logo
+       str(LOGO_PATH),
+       use_container_width=True,   # ✅ nouvelle version
+       caption="StreamOptions"
     )
+
