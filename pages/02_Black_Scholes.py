@@ -1,7 +1,3 @@
-import streamlit as st
-st.title("Pricing Options using Black and Scholes Method")
-st.write("Placeholder page — UI arriving next.")
-
 import sys
 import os
 import streamlit as st
@@ -14,142 +10,108 @@ import yfinance as yf
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from core.pricing import OptionPricer
 
+# Configuration de la page
+st.set_page_config(page_title="Black-Scholes Method", layout="wide")
 
-# ---------------------------------------------------------
-#   TITRE
-# ---------------------------------------------------------
-st.title("📈 Modèle de Black-Scholes — Prix, Greeks & Yahoo Finance")
+# Titre de la page
+st.title("Pricing Options using Black-Scholes Method")
 
+# Description de la page
+st.markdown("""
+This page allows you to calculate the price and Greeks of a European option (Call or Put) using the Black-Scholes method.
+""")
 
-# ---------------------------------------------------------
-#   RÉCUPÉRATION DU PRIX VIA YAHOO FINANCE
-# ---------------------------------------------------------
-st.subheader("📥 Charger le prix automatiquement via Yahoo Finance")
+# Paramètres directement sur la page principale
+col1, col2 = st.columns(2)
 
-ticker = st.text_input("Ticker Yahoo Finance (ex : AAPL, TSLA, MSFT)", "AAPL")
+with col1:
+    ticker = st.text_input("Select a ticker", "AAPL")
+    start_date = st.date_input("Start date", pd.to_datetime("2023-01-01"))
+    end_date = st.date_input("End date", pd.to_datetime("2023-12-31"))
+    kind = st.selectbox("Call or Put", ["call", "put"])
+    K = st.number_input("Strike Price", value=100.0)
+    r = st.number_input("Risk-free rate (r)", value=0.02)
+    sigma = st.number_input("Volatility (σ, annual)", value=0.2)
+    T = st.number_input("Maturity (T, in years)", value=1.0)
+    run = st.button("Calculate")
 
-if st.button("Charger le prix Yahoo Finance"):
-    data = yf.Ticker(ticker).history(period="1d")
-    if not data.empty:
-        last_price = float(data["Close"].iloc[-1])
-        st.success(f"Prix récupéré depuis Yahoo Finance : **{last_price} USD**")
-        S0_from_yahoo = last_price
-    else:
-        st.error("❌ Impossible de récupérer les données Yahoo Finance.")
-        S0_from_yahoo = None
-else:
-    S0_from_yahoo = None
+with col2:
+    if st.button("Price by time"):
+        data = yf.Ticker(ticker).history(start=start_date, end=end_date)
+        if not data.empty:
+            fig, ax = plt.subplots(figsize=(6, 3))  # Réduction de la taille du graphique
+            ax.plot(data.index, data['Close'])
+            ax.set_title(f"{ticker} Price by Time")
+            ax.set_xlabel("Date")
+            ax.set_ylabel("Price")
+            st.pyplot(fig)
+        else:
+            st.error("Unable to fetch data from Yahoo Finance.")
 
-
-# ---------------------------------------------------------
-#   BARRE LATÉRALE : PARAMÈTRES
-# ---------------------------------------------------------
-with st.sidebar:
-    st.header("Paramètres Black-Scholes")
-
-    kind = st.selectbox("Type d’option", ["call", "put"])
-
-    # Si un prix a été récupéré, on le met automatiquement
-    if S0_from_yahoo:
-        S0 = st.number_input("Prix spot S0", value=S0_from_yahoo)
-    else:
-        S0 = st.number_input("Prix spot S0", value=100.0)
-
-    K  = st.number_input("Strike K", value=100.0)
-    r  = st.number_input("Taux sans risque r", value=0.02)
-    sigma = st.number_input("Volatilité σ", value=0.2)
-    T = st.number_input("Maturité (années)", value=1.0)
-
-    run = st.button("Calculer")
-
-
-# ---------------------------------------------------------
-#   CALCUL BLACK-SCHOLES
-# ---------------------------------------------------------
 if run:
+    try:
+        data = yf.Ticker(ticker).history(period="1d")
+        if not data.empty:
+            S0 = float(data["Close"].iloc[-1])
+        else:
+            S0 = 100.0
+    except:
+        S0 = 100.0
 
     pricer = OptionPricer(S0=S0, K=K, r=r, sigma=sigma, T=T, kind=kind)
     res = pricer.black_scholes()
 
-    # Résultats
-    st.subheader("📊 Résultats Black-Scholes")
-    st.metric("Prix théorique", f"{res['price']:.6f}")
+    st.subheader("Results")
+    st.write(f"Estimated {kind} price: **{res['price']:.2f}**")
 
+    # Affichage des Greeks
     st.write("### Greeks")
-    st.table({
+    greeks_data = {
         "Delta": [res["delta"]],
         "Gamma": [res["gamma"]],
-        "Vega":  [res["vega"]],
+        "Vega": [res["vega"]],
         "Theta": [res["theta"]],
-        "Rho":   [res["rho"]],
-    })
+        "Rho": [res["rho"]]
+    }
+    st.table(greeks_data)
 
-    # Export CSV
-    df_result = pd.DataFrame([res])
-
-    st.download_button(
-        label="📥 Télécharger les résultats (CSV)",
-        data=df_result.to_csv(index=False).encode("utf-8"),
-        file_name="black_scholes_results.csv",
-        mime="text/csv"
-    )
-
-    # -----------------------------------------------------
-    #   GRAPHIQUE DU PAYOFF
-    # -----------------------------------------------------
-    st.subheader("📉 Payoff à maturité")
-
-    S_values = np.linspace(0.5 * S0, 1.5 * S0, 200)
-
+    # Graphique du Payoff avec taille réduite
+    st.subheader("Payoff at Maturity")
+    S_values = np.linspace(50, 150, 100)
     if kind == "call":
-        payoff = np.maximum(S_values - K, 0)
+        payoffs = [max(S - K, 0) for S in S_values]
     else:
-        payoff = np.maximum(K - S_values, 0)
+        payoffs = [max(K - S, 0) for S in S_values]
 
-    fig, ax = plt.subplots()
-    ax.plot(S_values, payoff)
-    ax.set_xlabel("Prix de l’actif S")
-    ax.set_ylabel("Payoff à maturité")
-    ax.set_title(f"Payoff de l’option ({kind})")
-
+    fig, ax = plt.subplots(figsize=(6, 3))  # Réduction de la taille du graphique
+    ax.plot(S_values, payoffs, label='Payoff')
+    ax.axvline(x=K, color='red', linestyle='--', label='Strike Price')
+    ax.set_xlabel('Underlying Price')
+    ax.set_ylabel('Payoff')
+    ax.set_title(f'Payoff of the {kind} option')
+    ax.legend()
     st.pyplot(fig)
 
-    # --- Graphique des Greeks ---
-st.subheader("Évolution des Greeks selon S")
+    # Graphique des Greeks avec taille réduite
+    st.subheader("Greeks Evolution")
+    S_grid = np.linspace(50, 150, 100)
+    deltas, gammas, vegas, thetas, rhos = [], [], [], [], []
+    for S in S_grid:
+        p = OptionPricer(S0=S, K=K, r=r, sigma=sigma, T=T, kind=kind).black_scholes()
+        deltas.append(p["delta"])
+        gammas.append(p["gamma"])
+        vegas.append(p["vega"])
+        thetas.append(p["theta"])
+        rhos.append(p["rho"])
 
-# Génération d'une grille de prix
-S_grid = np.linspace(0.5 * S0, 1.5 * S0, 100)
-
-# Calcul des greeks sur la grille
-deltas = []
-gammas = []
-vegas = []
-thetas = []
-rhos = []
-
-for S in S_grid:
-    p = OptionPricer(S0=S, K=K, r=r, sigma=sigma, T=T, kind=kind).black_scholes()
-    deltas.append(p["delta"])
-    gammas.append(p["gamma"])
-    vegas.append(p["vega"])
-    thetas.append(p["theta"])
-    rhos.append(p["rho"])
-
-# --- Affichage ---
-fig2, ax2 = plt.subplots()
-ax2.plot(S_grid, deltas, label="Delta")
-ax2.plot(S_grid, gammas, label="Gamma")
-ax2.plot(S_grid, vegas, label="Vega")
-ax2.plot(S_grid, thetas, label="Theta")
-ax2.plot(S_grid, rhos, label="Rho")
-
-ax2.set_xlabel("Prix de l’actif S")
-ax2.set_ylabel("Valeur du Greek")
-ax2.set_title("Évolution des Greeks en fonction du prix S")
-ax2.legend()
-
-st.pyplot(fig2)
-
-
-
-
+    fig2, ax2 = plt.subplots(figsize=(6, 3))  # Réduction de la taille du graphique
+    ax2.plot(S_grid, deltas, label="Delta")
+    ax2.plot(S_grid, gammas, label="Gamma")
+    ax2.plot(S_grid, vegas, label="Vega")
+    ax2.plot(S_grid, thetas, label="Theta")
+    ax2.plot(S_grid, rhos, label="Rho")
+    ax2.set_xlabel('Underlying Price')
+    ax2.set_ylabel('Greek Value')
+    ax2.set_title("Evolution of Greeks")
+    ax2.legend()
+    st.pyplot(fig2)
