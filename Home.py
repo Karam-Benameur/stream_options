@@ -1,4 +1,5 @@
 import os, sys
+from pathlib import Path          
 
 # — Assure que le dossier du projet est dans le PYTHONPATH —
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -20,6 +21,9 @@ import streamlit as st
 
 st.set_page_config(page_title="StreamOptions — Home", page_icon="🏠", layout="wide")
 
+# ======= chemin vers le logo (robuste) =======
+LOGO_PATH = Path(__file__).resolve().parent / "roadmap" / "pictures" / "logo.png"
+
 # Style léger pour coller à la maquette
 st.markdown("""
 <style>
@@ -37,15 +41,23 @@ a.stPageLink.selected { background:#FF7A3A; color:white; border-color:#FF7A3A;}
 """, unsafe_allow_html=True)
 
 with st.sidebar:
-    st.image("roadmap/pictures/logo.png", width=64)
-
-    # Pas de page_link sur Home pour éviter l'erreur -> juste un libellé "actif"
+    st.image(str(LOGO_PATH), width=64)
     st.markdown("**Home 🏠**")
-
-    # Liens vers les pages (fichiers dans /pages)
     st.page_link("pages/01_Monte_Carlo.py", label="Monte Carlo")
     st.page_link("pages/02_Black_Scholes.py", label="Black Scholes")
     st.page_link("pages/03_Binomial.py", label="Binomial")
 
 st.title("Home")
 hero_home()
+
+# ==========================
+#  GROS LOGO CENTRÉ AU MILIEU
+# ==========================
+col_left, col_center, col_right = st.columns([1, 2, 1])
+
+with col_center:
+    st.image(
+        str(LOGO_PATH),
+        use_column_width=True,     # le logo prend la largeur de la colonne
+        caption="StreamOptions"    # optionnel : petit texte sous le logo
+    )
