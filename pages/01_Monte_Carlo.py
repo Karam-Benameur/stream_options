@@ -178,7 +178,7 @@ if run_simulation:
 
     # 1) Trajectoires simulées
     with tab_paths:
-        st.write(f"Affichage de {n_show} trajectoires simulées (sur {paths.shape[1]}).")
+        st.write(f"Display of {n_show} simulated trajectories (out of {paths.shape[1]}).")
         st.line_chart(df_paths)
 
     # 2) Distribution du prix à l'échéance (courbe lissée)
@@ -188,9 +188,9 @@ if run_simulation:
 
         fig, ax = plt.subplots()
         ax.plot(centers, counts)
-        ax.set_title("Distribution du prix du sous-jacent à l'échéance")
+        ax.set_title("Distribution of the underlying price at maturity")
         ax.set_xlabel("S_T")
-        ax.set_ylabel("Densité empirique")
+        ax.set_ylabel("Empirical density")
         st.pyplot(fig)
 
     # 3) Convergence de l'estimation du prix
@@ -203,12 +203,12 @@ if run_simulation:
             {"n_sims": grid, "Price estimate": estimates}
         ).set_index("n_sims")
 
-        st.write("Convergence de l'estimation du prix en fonction du nombre de trajectoires :")
+        st.write("Convergence of the price estimate based on the number of trajectories:")
         st.line_chart(df_conv)
 
     # 4) Prix historiques du sous-jacent (graphe type image 1)
     with tab_hist:
-        st.write("Prix historique (Adj Close) sur la période sélectionnée :")
+        st.write("Historical price (Adj Close) over the selected period:")
         # 'Adj Close' si dispo, sinon 'Close'
         col_name = "Adj Close" if "Adj Close" in df_hist.columns else "Close"
         st.line_chart(df_hist[col_name])
