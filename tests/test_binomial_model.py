@@ -1,7 +1,14 @@
-import sys
 import os
+import sys
 import pytest
-from core.pricing import OptionPricer # Ensure app.py is in the root
+from pathlib import Path
+
+# Ajoute la racine du projet au PYTHONPATH (tests/.. = racine)
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from core.pricing import OptionPricer
 
 # Add root directory to path so we can import 'app'
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
