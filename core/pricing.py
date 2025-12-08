@@ -133,22 +133,8 @@ def _norm_cdf(x: float) -> float:
 class OptionPricer:
     """
     Petit pricer Black-Scholes pour une option européenne.
-
-    Attributes
-    ----------
-    S0 : float
-        Prix spot du sous-jacent.
-    K : float
-        Strike.
-    r : float
-        Taux sans risque (annuel).
-    sigma : float
-        Volatilité (annuelle).
-    T : float
-        Maturité en années.
-    kind : {"call", "put"}
-        Type d'option.
     """
+
     S0: float
     K: float
     r: float
@@ -224,3 +210,21 @@ class OptionPricer:
             "theta": theta,
             "rho": rho,
         }
+
+    @classmethod
+    def black_scholes_price(
+        cls,
+        S0: float,
+        K: float,
+        T: float,
+        r: float,
+        sigma: float,
+        kind: str = "call",
+    ) -> float:
+        """
+        Méthode de classe utilitaire pour obtenir *uniquement* le prix
+        Black-Scholes, comme attendu dans les tests unitaires.
+        """
+        pricer = cls(S0=S0, K=K, r=r, sigma=sigma, T=T, kind=kind)
+        res = pricer.black_scholes()
+        return res["price"]
