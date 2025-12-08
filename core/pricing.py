@@ -228,3 +228,59 @@ class OptionPricer:
         pricer = cls(S0=S0, K=K, r=r, sigma=sigma, T=T, kind=kind)
         res = pricer.black_scholes()
         return res["price"]
+
+    @classmethod
+    def calculate_bopm(
+        cls,
+        S0: float,
+        K: float,
+        T: float,
+        r: float,
+        sigma: float,
+        n_steps: int,
+        kind: str = "call",
+    ) -> float:
+        """
+        Prix d'une option européenne par modèle binomial (Cox-Ross-Rubinstein).
+
+        Cette méthode est appelée dans les tests unitaires pour vérifier que
+        le prix binomial converge vers Black-Scholes quand le nombre d'étapes
+        n_steps est grand.
+        """
+        if n_steps <= 0:
+            raise ValueError("n_steps must be a positive integer.")
+
+        kind = kind.lower()
+        dt = T / n_steps
+
+        # Facteurs de hausse / baisse (CRR)
+        u = exp(sigma * sqrt(dt))
+        d = 1.0 / u
+
+        # Probabilité risque-neutre et facteur d'actualisation
+        disc = exp(-r * dt)
+        p = (exp(r * dt) - d) / (u - d)
+        if not (0.0 <= p <= 1.0):
+            raise ValueError("Invalid risk-neutral probability (check parameters).")
+
+        # Prix du sous-jacent à maturité (t = T)
+        prices = [S0 * (u**j) * (d ** (n_steps - j)) for j in range(n_steps + 1)]
+
+        # Payoffs à maturité
+        if kind == "call":
+            values = [max(S - K, 0.0) for S in prices]
+        elif kind == "put":
+            values = [max(K - S, 0.0) for S in prices]
+        else:
+            raise ValueError("kind must be 'call' or 'put'")
+
+        # Remontée de l'arbre binomial (backward induction)
+        for step in range(n_steps - 1, -1, -1):
+            values = [
+                disc * (p * values[i + 1] + (1.0 - p) * values[i])
+                for i in range(step + 1)
+            ]
+
+        # Valeur de l'option au temps 0
+        return values[0]
+
