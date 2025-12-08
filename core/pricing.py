@@ -239,13 +239,16 @@ class OptionPricer:
         sigma: float,
         n_steps: int,
         kind: str = "call",
-    ) -> float:
+    ):
         """
         Prix d'une option européenne par modèle binomial (Cox-Ross-Rubinstein).
 
         Cette méthode est appelée dans les tests unitaires pour vérifier que
         le prix binomial converge vers Black-Scholes quand le nombre d'étapes
         n_steps est grand.
+
+        Elle renvoie un tuple (u, d, p, price0) pour que le 4ᵉ élément soit
+        le prix, comme supposé dans le fichier de tests.
         """
         if n_steps <= 0:
             raise ValueError("n_steps must be a positive integer.")
@@ -282,5 +285,7 @@ class OptionPricer:
             ]
 
         # Valeur de l'option au temps 0
-        return values[0]
+        price0 = values[0]
 
+        # On renvoie (u, d, p, price0) pour que bopm_res[3] soit le prix
+        return u, d, p, price0
