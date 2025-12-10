@@ -247,21 +247,24 @@ formule de Black–Scholes, modèle binomial) restent stables et compatibles
 entre elles au fur et à mesure de l’évolution du projet.
 
 
-Évaluation temps / mémoire
---------------------------
+Évaluation temps / précision
+----------------------------
 
-Pour la méthode Monte Carlo, nous avons réalisé une courte évaluation
-*temps / précision* :
+Pour la méthode Monte Carlo, nous discutons brièvement le compromis entre
+temps de calcul et précision :
 
-* le temps de calcul croît linéairement avec le **nombre de trajectoires**,
-* l’écart-type de l’estimateur décroît en :math:`1 / \sqrt{N}`,
-  ce qui est confirmé empiriquement,
-* pour un compromis raisonnable entre précision et temps de réponse dans
-  Streamlit, nous utilisons typiquement de 5 000 à 20 000 trajectoires.
+- le coût en calcul est proportionnel au nombre de trajectoires simulées
+  (complexité en O(N_sims × N_steps)) ;
+- l’écart-type de l’estimateur décroît théoriquement en :math:`1/\sqrt{N}`,
+  ce qui se voit dans l’onglet *Convergence* de la page Monte Carlo
+  (la courbe se stabilise quand on augmente le nombre de trajectoires) ;
+- en pratique, sur nos machines, un ordre de grandeur de 5 000 à 20 000
+  trajectoires donne un bon compromis entre précision et temps de réponse
+  dans l’interface Streamlit.
 
-Ce type d’analyse justifie les valeurs par défaut proposées dans l’interface
-et documente les limitations actuelles (par exemple sur des machines peu
-puissantes).
+Nous n’avons pas réalisé de profilage détaillé de la mémoire, mais la
+consommation augmente également avec le nombre de trajectoires stockées
+(par exemple pour afficher les trajectoires simulées).
 
 
 Limitations et pistes d’amélioration
