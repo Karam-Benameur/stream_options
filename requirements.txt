@@ -33,3 +33,7 @@ lxml>=6.0.2
 multitasking>=0.0.11
 platformdirs>=4.5.1
 frozendict>=2.4.7
+
+#Documentation
+sphinx>=7.0
+sphinx-rtd-theme>=2.0
