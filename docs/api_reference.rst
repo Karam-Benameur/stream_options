@@ -22,3 +22,10 @@ Module ``core.data_io``
    :members:
    :undoc-members:
    :show-inheritance:
+
+Module ``utils.plotting``
+-----------------------
+
+.. automodule:: utils.plotting
+   :members:
+   :undoc-members:
