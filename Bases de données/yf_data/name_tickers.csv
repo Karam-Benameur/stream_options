@@ -51,4 +51,261 @@ GLE.PA,Societe Generale SA
 SAP.DE,SAP SE
 BMW.DE,BMW AG
 SIE.DE,Siemens AG
-
+AAL,American Airlines Group
+DAL,Delta Air Lines
+UAL,United Airlines Holdings
+LUV,Southwest Airlines
+BA,Boeing Co
+GE,General Electric Co
+GM,General Motors Co
+F,Ford Motor Co
+TM,Toyota Motor Corp
+HMC,Honda Motor Co
+RIVN,Rivian Automotive
+LCID,Lucid Group
+PLTR,Palantir Technologies
+SNOW,Snowflake Inc
+NET,Cloudflare Inc
+ZS,Zscaler Inc
+OKTA,Okta Inc
+MDB,MongoDB Inc
+SNPS,Synopsys Inc
+INTU,Intuit Inc
+ADP,Automatic Data Processing
+NOW,ServiceNow Inc
+TEAM,Atlassian Corp
+CRWD,CrowdStrike Holdings
+PANW,Palo Alto Networks
+FTNT,Fortinet Inc
+DOCU,DocuSign Inc
+ZM,Zoom Video Communications
+TWLO,Twilio Inc
+BKNG,Booking Holdings
+EXPE,Expedia Group
+ABNB,Airbnb Inc
+MAR,Marriott International
+HLT,Hilton Worldwide
+DIS,The Walt Disney Co
+CMCSA,Comcast Corp
+CHTR,Charter Communications
+TGT,Target Corp
+WMT,Walmart Inc
+COST,Costco Wholesale
+HD,Home Depot Inc
+LOW,Lowes Companies
+SBUX,Starbucks Corp
+KO,Coca-Cola Co
+PEP,PepsiCo Inc
+PM,Philip Morris International
+MO,Altria Group
+PG,Procter & Gamble
+CL,Colgate-Palmolive
+KMB,Kimberly-Clark
+EL,Estee Lauder
+TMO,Thermo Fisher Scientific
+DHR,Danaher Corp
+ISRG,Intuitive Surgical
+SYK,Stryker Corp
+BSX,Boston Scientific
+LLY,Eli Lilly & Co
+JNJ,Johnson & Johnson
+GILD,Gilead Sciences
+AMGN,Amgen Inc
+REGN,Regeneron Pharmaceuticals
+VRTX,Vertex Pharmaceuticals
+UNH,UnitedHealth Group
+HUM,Humana Inc
+CI,Cigna Group
+CVS,CVS Health Corp
+WBA,Walgreens Boots Alliance
+UPS,United Parcel Service
+FDX,FedEx Corp
+UNP,Union Pacific
+CSX,CSX Corp
+NSC,Norfolk Southern
+CAT,Caterpillar Inc
+DE,Deere & Co
+HON,Honeywell International
+MMM,3M Co
+LMT,Lockheed Martin
+RTX,RTX Corp
+NOC,Northrop Grumman
+GD,General Dynamics
+SPGI,S&P Global Inc
+MSCI,MSCI Inc
+ICE,Intercontinental Exchange
+CME,CME Group
+BLK,BlackRock Inc
+TROW,T Rowe Price
+SCHW,Charles Schwab
+GS,Goldman Sachs Group
+MS,Morgan Stanley
+C,Citigroup Inc
+AXP,American Express
+BK,Bank of New York Mellon
+USB,U.S. Bancorp
+PNC,PNC Financial Services
+TD,The Toronto-Dominion Bank
+RY,Royal Bank of Canada
+BNS,Bank of Nova Scotia
+ENB,Enbridge Inc
+TRP,TC Energy Corp
+SU,Suncor Energy
+CNQ,Canadian Natural Resources
+BP,BP plc
+SHEL,Shell plc
+TTE,TotalEnergies SE
+EQNR,Equinor ASA
+NG,National Grid plc
+D,Dominion Energy
+SO,Southern Co
+DUK,Duke Energy
+NEE,NextEra Energy
+XEL,Xcel Energy
+ORAN,Orange SA
+TEF,Telefonica SA
+VOD,Vodafone Group
+BTI,British American Tobacco
+UL,Unilever plc
+RHHBY,Roche Holding AG ADR
+NVO,Novo Nordisk A/S
+ASML,ASML Holding NV
+ADYEN.AS,Adyen NV
+INGA.AS,ING Groep NV
+PHIA.AS,Koninklijke Philips
+RAND.AS,Randstad NV
+KPN.AS,KPN NV
+NOVN.SW,Novartis AG
+NESN.SW,Nestle SA
+UBSG.SW,UBS Group AG
+BAYN.DE,Bayer AG
+DTE.DE,Deutsche Telekom
+DBK.DE,Deutsche Bank
+ALV.DE,Allianz SE
+VOW3.DE,Volkswagen AG
+RWE.DE,RWE AG
+ENEL.MI,Enel SpA
+ISP.MI,Intesa Sanpaolo
+UCG.MI,UniCredit SpA
+STM.MI,STMicroelectronics NV
+LUX.MI,EssilorLuxottica
+ITX.MC,Inditex
+SAN.MC,Banco Santander
+BBVA.MC,Banco Bilbao Vizcaya Argentaria
+MELI,MercadoLibre Inc
+VALE,VALE SA
+PETR4.SA,Petrobras PN
+ITUB4.SA,Itau Unibanco
+BBDC4.SA,Banco Bradesco PN
+WEGE3.SA,WEG SA
+B3SA3.SA,B3 Brasil Bolsa Balcao
+SHOP.TO,Shopify Inc (TSX)
+BCE.TO,BCE Inc
+RCI-B.TO,Rogers Communications
+T.TO,Telus Corp
+WCN,Waste Connections
+TDOC,Teladoc Health
+ROKU,Roku Inc
+FSLY,Fastly Inc
+DDOG,Datadog Inc
+ESTC,Elastic NV
+FVRR,Fiverr International
+UPWK,Upwork Inc
+PINS,Pinterest Inc
+ETSY,Etsy Inc
+SQSP,Squarespace Inc
+AFRM,Affirm Holdings
+COIN,Coinbase Global
+HOOD,Robinhood Markets
+MU,Micron Technology
+TXN,Texas Instruments
+AVGO,Broadcom Inc
+QCOM,Qualcomm Inc
+ADI,Analog Devices
+NXPI,NXP Semiconductors
+MRVL,Marvell Technology
+LRCX,Lam Research
+AMAT,Applied Materials
+KLAC,KLA Corp
+WDAY,Workday Inc
+DOCN,DigitalOcean Holdings
+BIDU,Baidu Inc
+JD,JD.com Inc
+PDD,PDD Holdings
+NTES,NetEase Inc
+LI,Li Auto Inc
+NIO,NIO Inc
+XPEV,Xpeng Inc
+HL,Hecla Mining
+NEM,Newmont Corp
+GOLD,Barrick Gold
+FNV,Franco-Nevada
+AEM,Agnico Eagle Mines
+SLV,iShares Silver Trust
+GLD,SPDR Gold Shares
+SPY,SPDR S&P 500 ETF
+QQQ,Invesco QQQ Trust
+IWM,iShares Russell 2000 ETF
+EEM,iShares MSCI Emerging Markets ETF
+VNQ,Vanguard Real Estate ETF
+XLK,Technology Select Sector SPDR
+XLE,Energy Select Sector SPDR
+XLF,Financial Select Sector SPDR
+XLV,Health Care Select Sector SPDR
+XLY,Consumer Discretionary SPDR
+XLP,Consumer Staples SPDR
+XLI,Industrial Select Sector SPDR
+XLC,Communication Services SPDR
+XLU,Utilities Select Sector SPDR
+IYR,iShares U.S. Real Estate ETF
+SMH,VanEck Semiconductor ETF
+ARKK,ARK Innovation ETF
+ARKW,ARK Next Generation Internet ETF
+ARKG,ARK Genomic Revolution ETF
+ARKF,ARK Fintech Innovation ETF
+ARKQ,ARK Autonomous Tech & Robotics ETF
+LIT,Global X Lithium ETF
+TAN,Invesco Solar ETF
+ICLN,iShares Global Clean Energy ETF
+XOP,SPDR S&P Oil & Gas E&P ETF
+KRE,SPDR S&P Regional Banking ETF
+XRT,SPDR S&P Retail ETF
+XHB,SPDR S&P Homebuilders ETF
+XME,SPDR S&P Metals & Mining ETF
+EFA,iShares MSCI EAFE ETF
+TLT,iShares 20+ Year Treasury Bond ETF
+HYG,iShares iBoxx High Yield Corp Bond ETF
+LQD,iShares iBoxx Investment Grade Corp Bond ETF
+BND,Vanguard Total Bond Market ETF
+VT,Vanguard Total World Stock ETF
+VTI,Vanguard Total Stock Market ETF
+VOO,Vanguard S&P 500 ETF
+UUP,Invesco DB US Dollar Index Fund
+FXE,Invesco CurrencyShares Euro ETF
+GLDM,SPDR Gold MiniShares Trust
+SHY,iShares 1-3 Year Treasury Bond ETF
+IEF,iShares 7-10 Year Treasury Bond ETF
+SPCE,Virgin Galactic Holdings
+CCL,Carnival Corp
+RCL,Royal Caribbean Cruises
+NCLH,Norwegian Cruise Line
+MGM,MGM Resorts International
+LVS,Las Vegas Sands
+WYNN,Wynn Resorts
+EA,Electronic Arts
+TTWO,Take-Two Interactive
+ATVI,Activision Blizzard
+UBI.PA,Ubisoft Entertainment
+ERIC,Ericsson
+NOK,Nokia Corp
+SWKS,Skyworks Solutions
+HPQ,HP Inc
+DELL,Dell Technologies
+ADSK,Autodesk Inc
+ANSS,ANSYS Inc
+DG.PA,Vinci SA
+RMS.PA,Hermes International
+PUB.PA,Publicis Groupe
+CAP.PA,Capgemini SE
+KER.PA,Kering SA
+HO.PA,Thales SA
