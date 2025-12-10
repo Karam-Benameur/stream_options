@@ -28,7 +28,7 @@ flake8==7.0.0
 curl-cffi>=0.13.0
 websockets>=13.0
 
-# Dependencies optionnelles mais recommandées
+# Dependencies 
 lxml>=6.0.2
 multitasking>=0.0.11
 platformdirs>=4.5.1
