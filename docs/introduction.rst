@@ -26,45 +26,65 @@ L’arborescence du projet est la suivante :
 .. code-block:: text
 
    stream_options/
-   ├─ Home.py                 # Page d’accueil Streamlit (point d’entrée)
-   ├─ requirements.txt        # Dépendances du projet
-   ├─ LICENSE                 # Licence
+   ├─ Home.py                    # Page d’accueil Streamlit (point d’entrée)
+   ├─ requirements.txt           # Dépendances Python (Streamlit, numpy, pandas, yfinance, sphinx, pytest, …)
+   ├─ LICENSE                    # Licence du projet
+   ├─ verify.py                  # Script local de vérification rapide (optionnel)
+   ├─ .gitignore                 # Fichiers ignorés par Git
    │
-   ├─ core/                   # Cœur métier (logique Python)
-   │  ├─ pricing.py           # Monte Carlo + Black-Scholes + classe OptionPricer
-   │  └─ data_io.py           # Récupération des données Yahoo + calcul S0 & volatilité
+   ├─ .streamlit/
+   │  └─ config.toml             # Thème et configuration de l’application Streamlit
    │
-   ├─ pages/                  # Pages Streamlit
-   │  ├─ 01_Monte_Carlo.py    # Interface Monte Carlo (trajectoires, convergence, etc.)
-   │  ├─ 02_Black_Scholes.py  # Interface Black-Scholes (prix + Greeks)
-   │  └─ 03_Binomial.py       # Interface modèle binomial
+   ├─ .github/
+   │  └─ workflows/
+   │     └─ ci.yml               # Intégration continue GitHub Actions (installation + pytest)
    │
-   ├─ tests/                  # Tests unitaires (pytest)
-   │  ├─ test_pricing.py          # Test Black-Scholes + Monte Carlo (core.pricing)
-   │  ├─ test_monte_carlo.py      # Tests dédiés à la partie simulation
-   │  ├─ test_black_scholes.py    # Tests sur la cohérence des prix BS
-   │  └─ test_binomial_model.py   # Tests sur le modèle binomial
+   ├─ core/                      # Cœur métier (logique de pricing)
+   │  ├─ pricing.py              # Monte Carlo, Black-Scholes, classe OptionPricer
+   │  └─ data_io.py              # Téléchargement Yahoo Finance + calcul S0 / volatilité
    │
-   ├─ Bases de données/
-   │  └─ yf_data/             # Données Yahoo Finance
-   │     ├─ name_tickers.csv  # Liste de tickers + noms lisibles
-   │     └─ *.csv             # Historiques téléchargés (AAPL_2020-2025, etc.)
+   ├─ pages/                     # Pages Streamlit
+   │  ├─ 01_Monte_Carlo.py       # Interface Monte Carlo (trajectoires, convergence, etc.)
+   │  ├─ 02_Black_Scholes.py     # Interface Black-Scholes (prix + Greeks)
+   │  └─ 03_Binomial.py          # Interface modèle binomial
    │
    ├─ utils/
-   │  └─ plotting.py          # Fonctions graphiques (ex : hero_home pour la page Home)
+   │  └─ plotting.py             # Fonctions de mise en forme / graphiques (hero_home, etc.)
    │
-   ├─ docs/                   # Documentation Sphinx
-   │  ├─ conf.py              # Configuration Sphinx
-   │  ├─ index.rst            # Page d’accueil de la doc
-   │  ├─ introduction.rst     # Ce fichier : présentation du projet
-   │  └─ api_reference.rst    # Référence de l’API Python (automodule)
+   ├─ tests/                     # Tests unitaires (pytest)
+   │  ├─ test_pricing.py         # Tests généraux sur core.pricing
+   │  ├─ test_monte_carlo.py     # Tests dédiés à la simulation Monte Carlo
+   │  ├─ test_black_scholes.py   # Tests sur les formules Black-Scholes
+   │  ├─ test_binomial_model.py  # Tests sur le modèle binomial
+   │  └─ test_yfinance.py        # Vérification du bon fonctionnement de yfinance
    │
-   ├─ roadmap/                # Notes de conception
-   │  ├─ README.md            # Idées, TODO, vision du projet
-   │  └─ pictures/            # Schémas, Gantt, logo, etc.
+   ├─ Bases de données/
+   │  └─ yf_data/                # Données Yahoo Finance
+   │     ├─ name_tickers.csv     # Liste de tickers + noms lisibles
+   │     └─ *.csv                # Historiques téléchargés (AAPL_2020-2025, BNP.PA_…, etc.)
    │
-   └─ slides/                 # Support de soutenance
-      └─ presentation.tex / pdf
+   ├─ docs/                      # Documentation Sphinx
+   │  ├─ conf.py                 # Configuration Sphinx
+   │  ├─ index.rst               # Page d’accueil de la doc
+   │  ├─ introduction.rst        # Présentation du projet et organisation du code
+   │  ├─ api_reference.rst       # Référence de l’API Python (automodule)
+   │  ├─ Makefile                # Build Unix (sphinx-build)
+   │  └─ make.bat                # Build Windows
+   │
+   ├─ roadmap/                   # Notes de conception
+   │  └─ pictures/
+   │     ├─ logo.png             # Logo de l’application
+   │     ├─ 1.png … 4.png        # Captures / schémas de l’interface
+   │     ├─ Gantt_Diagram.md     # Diagramme de Gantt
+   │     ├─ README.md            # Idées, TODO, vision du projet
+   │     └─ theoretical images.md# Notes sur les figures théoriques
+   │
+   ├─ slides/                    # Support de soutenance
+   │  ├─ presentation.tex        # Source LaTeX des slides
+   │  └─ diapo_streamoptions.pdf # PDF généré pour la présentation
+   │
+   └─ templates/                 # Modèles auxiliaires
+      └─ .gitignore              # Placeholder pour garder le dossier dans Git
 
 
 Organisation du code
@@ -160,6 +180,11 @@ Dossier regroupant les **tests unitaires** (framework ``pytest``) :
 
 * ``test_binomial_model.py`` – vérifie la stabilité et la convergence du
   modèle binomial.
+
+* ``test_yfinance.py`` – script de validation de la dépendance
+    :mod:`yfinance` : téléchargement d’un historique, accès aux
+    méta-données, vérification qu’aucune erreur bloquante ne se
+    produit.
 
 ``utils.plotting``
 ~~~~~~~~~~~~~~~~~~
